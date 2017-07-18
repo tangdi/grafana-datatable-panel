@@ -422,7 +422,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
         }, {
           key: 'exportCsv',
           value: function exportCsv() {
-            var renderer = new DatatableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+            var renderer = new DatatableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize, this.$injector.get('linkSrv'));
             FileExport.exportTableDataToCsv(renderer.render_values());
           }
         }, {
@@ -438,7 +438,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
              * @return {[type]} [description]
              */
             function renderPanel() {
-              var renderer = new DatatableRenderer(panel, ctrl.table, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize);
+              var renderer = new DatatableRenderer(panel, ctrl.table, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize, ctrl.$injector.get('linkSrv'));
               renderer.render();
               _this.dataLoaded = true;
             }

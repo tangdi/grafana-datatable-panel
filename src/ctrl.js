@@ -404,7 +404,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
   }
 
   exportCsv() {
-    var renderer = new DatatableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize);
+    var renderer = new DatatableRenderer(this.panel, this.table, this.dashboard.isTimezoneUtc(), this.$sanitize, this.$injector.get('linkSrv'));
     FileExport.exportTableDataToCsv(renderer.render_values());
   }
 
@@ -419,7 +419,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
      * @return {[type]} [description]
      */
     function renderPanel() {
-      var renderer = new DatatableRenderer(panel, ctrl.table, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize);
+      var renderer = new DatatableRenderer(panel, ctrl.table, ctrl.dashboard.isTimezoneUtc(), ctrl.$sanitize, ctrl.$injector.get('linkSrv'));
       renderer.render();
       _this.dataLoaded = true;
     }

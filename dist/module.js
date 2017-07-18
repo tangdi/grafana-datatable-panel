@@ -9,6 +9,8 @@ System.register(['./ctrl'], function (_export, _context) {
       DatatablePanelCtrl = _ctrl.DatatablePanelCtrl;
     }],
     execute: function () {
+      _export('DatatablePanelCtrl', DatatablePanelCtrl);
+
       _export('PanelCtrl', DatatablePanelCtrl);
     }
   };

@@ -4,13 +4,14 @@ import moment from 'moment';
 import DataTable from './libs/datatables.net/js/jquery.dataTables.min.js';
 
 export class DatatableRenderer {
-  constructor(panel, table, isUtc, sanitize) {
+  constructor(panel, table, isUtc, sanitize, linkSrv) {
     this.formatters = [];
     this.colorState = {};
     this.panel = panel;
     this.table = table;
     this.isUtc = isUtc;
     this.sanitize = sanitize;
+    this.linkSrv = linkSrv;
   }
 
   /**
@@ -154,8 +155,10 @@ export class DatatableRenderer {
         let value = this.formatColumnValue(i, row[i]);
         if (value === undefined) {
           this.table.columns[i].hidden = true;
+        } else {
+            value = this.formatDrilldown(this.table.columns[i].text,value,this.panel,this.linkSrv);
         }
-        cellData.push(this.formatColumnValue(i, row[i]));
+        cellData.push(value);
       }
       if (this.panel.rowNumbersEnabled) {
         cellData.unshift('rowCounter');
@@ -469,6 +472,43 @@ export class DatatableRenderer {
     }
   }
 
+  formatDrilldown(columnText,value,panel,linkSrv){
+        if (!panel.drilldowns||!linkSrv){
+            return value;
+        }
+
+        for (var y = 0; y < panel.drilldowns.length; y++){
+            var drilldown = panel.drilldowns[y];
+            var regexp = new RegExp(drilldown.alias);
+            if (regexp.test(columnText)){
+
+                var scopedVars = {};
+
+                scopedVars[columnText] = {"value": value};
+
+                if (drilldown.separator && drilldown.separator.trim().length>0){
+                    var values = value.split(drilldown.separator);
+                    for (var i = 0; i < values.length; i++ ){
+                        scopedVars["alias"+i] = {"value": values[i]};
+                    }
+                }
+
+                //add panel.scopedVars for repeat var
+                if (panel.repeat && panel.scopedVars[panel.repeat] && panel.scopedVars[panel.repeat].value){
+                    scopedVars[panel.repeat] = panel.scopedVars[panel.repeat].value;
+                }
+
+                var link = linkSrv.getPanelLinkAnchorInfo(drilldown,scopedVars);
+
+                return '<a class="panel-menu-link" style="color:#33B5E5;" target="'+link.target+'" href="'+link.href+'">' + link.title + '</a>';
+
+            }
+        }
+
+        return value;
+
+    }
+
   render_values() {
       let rows = [];
 
@@ -476,7 +516,7 @@ export class DatatableRenderer {
         let row = this.table.rows[y];
         let new_row = [];
         for (var i = 0; i < this.table.columns.length; i++) {
-          new_row.push(this.formatColumnValue(i, row[i]));
+            new_row.push( this.formatColumnValue(i, row[i]));
         }
         rows.push(new_row);
       }

@@ -3,7 +3,7 @@
 System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.net/js/jquery.dataTables.min.js'], function (_export, _context) {
   "use strict";
 
-  var $, kbn, moment, DataTable, _typeof, _createClass, DatatableRenderer;
+  var $, kbn, moment, DataTable, _createClass, DatatableRenderer;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -22,12 +22,6 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
       DataTable = _libsDatatablesNetJsJqueryDataTablesMinJs.default;
     }],
     execute: function () {
-      _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-        return typeof obj;
-      } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-
       _createClass = function () {
         function defineProperties(target, props) {
           for (var i = 0; i < props.length; i++) {
@@ -47,7 +41,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
       }();
 
       _export('DatatableRenderer', DatatableRenderer = function () {
-        function DatatableRenderer(panel, table, isUtc, sanitize) {
+        function DatatableRenderer(panel, table, isUtc, sanitize, linkSrv) {
           _classCallCheck(this, DatatableRenderer);
 
           this.formatters = [];
@@ -56,6 +50,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
           this.table = table;
           this.isUtc = isUtc;
           this.sanitize = sanitize;
+          this.linkSrv = linkSrv;
         }
 
         /**
@@ -136,25 +131,19 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
               };
             }
             if (style.type === 'number') {
-              var _ret = function () {
-                var valueFormatter = kbn.valueFormats[column.unit || style.unit];
-                return {
-                  v: function v(_v) {
-                    if (_v === null || _v === void 0) {
-                      return '-';
-                    }
-                    if (_.isString(_v)) {
-                      return _this2.defaultCellFormatter(_v, style);
-                    }
-                    if (style.colorMode) {
-                      _this2.colorState[style.colorMode] = _this2.getColorForValue(_v, style);
-                    }
-                    return valueFormatter(_v, style.decimals, null);
-                  }
-                };
-              }();
-
-              if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+              var valueFormatter = kbn.valueFormats[column.unit || style.unit];
+              return function (v) {
+                if (v === null || v === void 0) {
+                  return '-';
+                }
+                if (_.isString(v)) {
+                  return _this2.defaultCellFormatter(v, style);
+                }
+                if (style.colorMode) {
+                  _this2.colorState[style.colorMode] = _this2.getColorForValue(v, style);
+                }
+                return valueFormatter(v, style.decimals, null);
+              };
             }
             return function (value) {
               return _this2.defaultCellFormatter(value, style);
@@ -192,8 +181,10 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                 var value = this.formatColumnValue(i, row[i]);
                 if (value === undefined) {
                   this.table.columns[i].hidden = true;
+                } else {
+                  value = this.formatDrilldown(this.table.columns[i].text, value, this.panel, this.linkSrv);
                 }
-                cellData.push(this.formatColumnValue(i, row[i]));
+                cellData.push(value);
               }
               if (this.panel.rowNumbersEnabled) {
                 cellData.unshift('rowCounter');
@@ -492,6 +483,42 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                 });
               }).draw();
             }
+          }
+        }, {
+          key: 'formatDrilldown',
+          value: function formatDrilldown(columnText, value, panel, linkSrv) {
+            if (!panel.drilldowns || !linkSrv) {
+              return value;
+            }
+
+            for (var y = 0; y < panel.drilldowns.length; y++) {
+              var drilldown = panel.drilldowns[y];
+              var regexp = new RegExp(drilldown.alias);
+              if (regexp.test(columnText)) {
+
+                var scopedVars = {};
+
+                scopedVars[columnText] = { "value": value };
+
+                if (drilldown.separator && drilldown.separator.trim().length > 0) {
+                  var values = value.split(drilldown.separator);
+                  for (var i = 0; i < values.length; i++) {
+                    scopedVars["alias" + i] = { "value": values[i] };
+                  }
+                }
+
+                //add panel.scopedVars for repeat var
+                if (panel.repeat && panel.scopedVars[panel.repeat] && panel.scopedVars[panel.repeat].value) {
+                  scopedVars[panel.repeat] = panel.scopedVars[panel.repeat].value;
+                }
+
+                var link = linkSrv.getPanelLinkAnchorInfo(drilldown, scopedVars);
+
+                return '<a class="panel-menu-link" style="color:#33B5E5;" target="' + link.target + '" href="' + link.href + '">' + link.title + '</a>';
+              }
+            }
+
+            return value;
           }
         }, {
           key: 'render_values',
