@@ -34,6 +34,10 @@
 					<input type="text" class="gf-form-input" ng-model="style.pattern" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 data-items=100 ng-model-onblur>
 				</div>
 				<div class="gf-form">
+					<label class="gf-form-label">Column Header</label>
+					<input type="text" class="gf-form-input" ng-model="style.header" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 data-items=100 ng-model-onblur>
+				</div>
+				<div class="gf-form">
 					<label class="gf-form-label">Type</label>
 					<div class="gf-form-select-wrapper">
 						<select class="gf-form-input" ng-model="style.type" ng-options="c.value as c.text for c in ctrl.columnTypes" ng-change="ctrl.render()"></select>

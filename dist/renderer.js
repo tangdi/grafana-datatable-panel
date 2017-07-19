@@ -271,8 +271,10 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
             }
             for (var i = 0; i < this.table.columns.length; i++) {
               /* jshint loopfunc: true */
+              var style = this.getStyleForColumn(i);
+
               columns.push({
-                title: this.table.columns[i].text,
+                title: style != void 0 && style.header != void 0 ? style.header : this.table.columns[i].text,
                 type: this.table.columns[i].type
               });
               columnDefs.push({
