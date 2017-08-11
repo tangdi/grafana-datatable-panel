@@ -481,16 +481,15 @@ export class DatatableRenderer {
         }
 
 
-        for (y = 0; y < panel.drilldowns.length; y++){
+        for (var y = 0; y < panel.drilldowns.length; y++){
             var drilldown = panel.drilldowns[y];
             var regexp = new RegExp(drilldown.alias);
-            var columnText = columnHeader[columnIndex].text
+            var columnText = columnHeader[columnIndex].text;
             if (regexp.test(columnText)){
 
                 var scopedVars = {};
-
-                for(i =0;i< columnHeader.length; i++){
-                    scopedVars[columnHeader[i]] = {"value": row[i]};
+                for(var j =0;j< columnHeader.length; j++){
+                    scopedVars[columnHeader[j]] = {"value": row[j]};
                 }
 
                 if (drilldown.separator && drilldown.separator.trim().length>0){

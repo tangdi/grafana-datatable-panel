@@ -182,7 +182,8 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                 if (value === undefined) {
                   this.table.columns[i].hidden = true;
                 } else {
-                  value = this.formatDrilldown(this.table.columns[i].text, value, this.panel, this.linkSrv);
+                  //this.table.columns[i].text
+                  value = this.formatDrilldown(this.table.columns, row, i, value, this.panel, this.linkSrv);
                 }
                 cellData.push(value);
               }
@@ -488,7 +489,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
           }
         }, {
           key: 'formatDrilldown',
-          value: function formatDrilldown(columnText, value, panel, linkSrv) {
+          value: function formatDrilldown(columnHeader, row, columnIndex, value, panel, linkSrv) {
             if (!panel.drilldowns || !linkSrv) {
               return value;
             }
@@ -496,14 +497,16 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
             for (var y = 0; y < panel.drilldowns.length; y++) {
               var drilldown = panel.drilldowns[y];
               var regexp = new RegExp(drilldown.alias);
+              var columnText = columnHeader[columnIndex].text;
               if (regexp.test(columnText)) {
 
                 var scopedVars = {};
-
-                scopedVars[columnText] = { "value": value };
+                for (var j = 0; j < columnHeader.length; j++) {
+                  scopedVars[columnHeader[j]] = { "value": row[j] };
+                }
 
                 if (drilldown.separator && drilldown.separator.trim().length > 0) {
-                  var values = value.split(drilldown.separator);
+                  var values = value.split(new RegExp(drilldown.separator));
                   for (var i = 0; i < values.length; i++) {
                     scopedVars["alias" + i] = { "value": values[i] };
                   }
