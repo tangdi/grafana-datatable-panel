@@ -156,7 +156,8 @@ export class DatatableRenderer {
         if (value === undefined) {
           this.table.columns[i].hidden = true;
         } else {
-            value = this.formatDrilldown(this.table.columns[i].text,value,this.panel,this.linkSrv);
+            //this.table.columns[i].text
+            value = this.formatDrilldown(this.table.columns,row,i,value,this.panel,this.linkSrv);
         }
         cellData.push(value);
       }
@@ -474,19 +475,23 @@ export class DatatableRenderer {
     }
   }
 
-  formatDrilldown(columnText,value,panel,linkSrv){
+  formatDrilldown(columnHeader,row,columnIndex,value,panel,linkSrv){
         if (!panel.drilldowns||!linkSrv){
             return value;
         }
 
-        for (var y = 0; y < panel.drilldowns.length; y++){
+
+        for (y = 0; y < panel.drilldowns.length; y++){
             var drilldown = panel.drilldowns[y];
             var regexp = new RegExp(drilldown.alias);
+            var columnText = columnHeader[i].text
             if (regexp.test(columnText)){
 
                 var scopedVars = {};
 
-                scopedVars[columnText] = {"value": value};
+                for(i =0;i< columnHeader.length; i++){
+                    scopedVars[columnHeader[i]] = {"value": row[i]};
+                }
 
                 if (drilldown.separator && drilldown.separator.trim().length>0){
                     var values = value.split(new RegExp(drilldown.separator));
