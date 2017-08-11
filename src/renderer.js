@@ -484,7 +484,7 @@ export class DatatableRenderer {
         for (y = 0; y < panel.drilldowns.length; y++){
             var drilldown = panel.drilldowns[y];
             var regexp = new RegExp(drilldown.alias);
-            var columnText = columnHeader[i].text
+            var columnText = columnHeader[columnIndex].text
             if (regexp.test(columnText)){
 
                 var scopedVars = {};
