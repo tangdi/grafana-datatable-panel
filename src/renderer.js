@@ -489,7 +489,7 @@ export class DatatableRenderer {
 
                 var scopedVars = {};
                 for(var j =0;j< columnHeader.length; j++){
-                    scopedVars[columnHeader[j]] = {"value": row[j]};
+                    scopedVars[columnHeader[j].text] = {"value": row[j]};
                 }
 
                 if (drilldown.separator && drilldown.separator.trim().length>0){
