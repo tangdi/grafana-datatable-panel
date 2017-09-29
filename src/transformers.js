@@ -299,7 +299,12 @@ function transformDataToTable(data, panel) {
                                     if ($.isNumeric(row[dp[name]])) {
                                         row[dp[name]] = row[dp[name]] + dp[interchange[1]];
                                     } else {
-                                        row[dp[name]] = row[dp[name]] + ", " + dp[interchange[1]];
+                                        if(row[dp[name]]){
+                                            row[dp[name]] = row[dp[name]] + ", " + dp[interchange[1]];
+                                        }else{
+                                            row[dp[name]] = dp[interchange[1]];
+                                        }
+
                                     }
                                 }
                             } else if (interchange.length == 2 && interchange[1] != name) {
@@ -307,7 +312,12 @@ function transformDataToTable(data, panel) {
                                     if ($.isNumeric(row[dp[name]])) {
                                         row[name] = row[name] + dp[name];
                                     } else {
-                                        row[name] = row[name] + ", " + dp[name];
+                                        if(row[name]){
+                                            row[name] = row[name] + ", " + dp[name];
+                                        }else{
+                                            row[name] =dp[name];
+                                        }
+
                                     }
                                 }
                             }
