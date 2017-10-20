@@ -193,7 +193,6 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                             }
                         }
                     }
-
                     series.datapoints.push(newRow);
                 }
             }

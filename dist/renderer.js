@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.net/js/jquery.dataTables.min.js'], function (_export, _context) {
+System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.net/js/jquery.dataTables.min.js', './libs/datatables.net-responsive/js/dataTables.responsive.js', './libs/datatables.net-buttons/js/dataTables.buttons.js', './libs/datatables.net-buttons/js/buttons.colVis.js'], function (_export, _context) {
   "use strict";
 
   var $, kbn, moment, DataTable, _createClass, DatatableRenderer;
@@ -20,7 +20,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
       moment = _moment.default;
     }, function (_libsDatatablesNetJsJqueryDataTablesMinJs) {
       DataTable = _libsDatatablesNetJsJqueryDataTablesMinJs.default;
-    }],
+    }, function (_libsDatatablesNetResponsiveJsDataTablesResponsiveJs) {}, function (_libsDatatablesNetButtonsJsDataTablesButtonsJs) {}, function (_libsDatatablesNetButtonsJsButtonsColVisJs) {}],
     execute: function () {
       _createClass = function () {
         function defineProperties(target, props) {
@@ -420,7 +420,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
             }
 
             var tableOptions = {
-              "lengthMenu": [[5, 10, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, "All"]],
+              "lengthMenu": [[5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, "All"]],
               searching: this.panel.searchEnabled,
               info: this.panel.infoEnabled,
               lengthChange: this.panel.lengthChangeEnabled,
@@ -432,7 +432,10 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
               "search": {
                 "regex": true
               },
-              "order": orderSetting
+              "order": orderSetting,
+              responsive: true,
+              dom: 'Bfrtip',
+              buttons: ['colvis']
             };
             if (this.panel.scroll) {
               tableOptions.paging = false;

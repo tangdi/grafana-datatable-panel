@@ -2,6 +2,9 @@ import $ from 'jquery';
 import kbn from 'app/core/utils/kbn';
 import moment from 'moment';
 import DataTable from './libs/datatables.net/js/jquery.dataTables.min.js';
+// import './libs/datatables.net-responsive/js/dataTables.responsive.js';
+// import './libs/datatables.net-buttons/js/dataTables.buttons.js';
+// import './libs/datatables.net-buttons/js/buttons.colVis.js';
 
 export class DatatableRenderer {
   constructor(panel, table, isUtc, sanitize, linkSrv) {
@@ -407,7 +410,7 @@ export class DatatableRenderer {
     }
 
     var tableOptions = {
-      "lengthMenu": [ [5, 10, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, "All"] ],
+      "lengthMenu": [ [5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, "All"] ],
       searching: this.panel.searchEnabled,
       info: this.panel.infoEnabled,
       lengthChange: this.panel.lengthChangeEnabled,
@@ -419,7 +422,12 @@ export class DatatableRenderer {
       "search": {
         "regex": true
       },
-      "order": orderSetting
+      "order": orderSetting,
+       responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'colvis'
+        ]
     };
     if (this.panel.scroll) {
       tableOptions.paging = false;

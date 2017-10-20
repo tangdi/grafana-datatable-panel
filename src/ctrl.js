@@ -5,6 +5,9 @@ import kbn from 'app/core/utils/kbn';
 
 import * as FileExport from 'app/core/utils/file_export';
 import DataTable from './libs/datatables.net/js/jquery.dataTables.min.js';
+import './libs/datatables.net-responsive/js/dataTables.responsive.js';
+import './libs/datatables.net-buttons/js/dataTables.buttons.js';
+import './libs/datatables.net-buttons/js/buttons.colVis.js';
 
 // this is needed for basic datatables.net theme
 //import './libs/datatables.net-dt/css/jquery.dataTables.min.css!';

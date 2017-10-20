@@ -412,11 +412,8 @@ function groupby(data, panel) {
                         for (var a = 0; a < totals.expressions[z].operators.length; a++) {
                             newRow[totals.expressions[z].summay] += newRow[totals.expressions[z].operators[a]];
                         }
-
                     }
-
                 }
-
                 series.datapoints.push(newRow);
             }
         }

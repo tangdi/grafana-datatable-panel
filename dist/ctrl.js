@@ -1,9 +1,9 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', 'app/core/utils/file_export', './libs/datatables.net/js/jquery.dataTables.min.js', './css/panel.css!', './css/datatables-wrapper.css!', './transformers', './renderer'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', 'app/core/utils/file_export', './libs/datatables.net/js/jquery.dataTables.js', './libs/datatables.net-responsive/js/dataTables.responsive.js', './libs/datatables.net-buttons/js/dataTables.buttons.js', './libs/datatables.net-buttons/js/buttons.colVis.js', './css/panel.css!', './css/datatables-wrapper.css!', './transformers', './renderer'], function (_export, _context) {
     "use strict";
 
-    var MetricsPanelCtrl, $, angular, kbn, FileExport, DataTable, transformDataToTable, transformers, DatatableRenderer, _createClass, _get, panelDefaults, DatatablePanelCtrl;
+    var MetricsPanelCtrl, $, angular, kbn, FileExport, transformDataToTable, transformers, DatatableRenderer, _createClass, _get, panelDefaults, DatatablePanelCtrl;
 
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
@@ -46,9 +46,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
             kbn = _appCoreUtilsKbn.default;
         }, function (_appCoreUtilsFile_export) {
             FileExport = _appCoreUtilsFile_export;
-        }, function (_libsDatatablesNetJsJqueryDataTablesMinJs) {
-            DataTable = _libsDatatablesNetJsJqueryDataTablesMinJs.default;
-        }, function (_cssPanelCss) {}, function (_cssDatatablesWrapperCss) {}, function (_transformers) {
+        }, function (_libsDatatablesNetJsJqueryDataTablesJs) {}, function (_libsDatatablesNetResponsiveJsDataTablesResponsiveJs) {}, function (_libsDatatablesNetButtonsJsDataTablesButtonsJs) {}, function (_libsDatatablesNetButtonsJsButtonsColVisJs) {}, function (_cssPanelCss) {}, function (_cssDatatablesWrapperCss) {}, function (_transformers) {
             transformDataToTable = _transformers.transformDataToTable;
             transformers = _transformers.transformers;
         }, function (_renderer) {
