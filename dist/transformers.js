@@ -107,6 +107,21 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
         return columnsName.join("_");
     }
 
+    function appendValues(oldValue, newValue) {
+        if (!oldValue) {
+            return newValue;
+        }
+        if ($.isNumeric(oldValue)) {
+            return oldValue + newValue;
+        } else {
+            if (oldValue.indexOf(newValue + ",") < 0 && oldValue.indexOf("," + newValue)) {
+                return oldValue + ", " + newValue;
+            } else {
+                return oldValue;
+            }
+        }
+    }
+
     function groupby(data, panel) {
         if (panel.groupBy && panel.groupBy.length > 0) {
             var map = {};
@@ -130,30 +145,15 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                         //append to key
                         for (var name in dp) {
                             if (groupBys.indexOf(name) < 0) {
+                                //need interchange row and column
                                 if (interchange != null && interchange.values.indexOf(name) >= 0) {
                                     if (!shouldHidden(hiddenValues, name, dp[name])) {
                                         var columnName = getInterchangeColummnName(interchange, dp);
-                                        if ($.isNumeric(row[columnName])) {
-                                            row[columnName] = row[columnName] + dp[name];
-                                        } else {
-                                            if (row[columnName]) {
-                                                row[columnName] = row[columnName] + ", " + dp[name];
-                                            } else {
-                                                row[columnName] = dp[name];
-                                            }
-                                        }
+                                        row[columnName] = appendValues(row[columnName], dp[name]);
                                     }
                                 } else if (interchange == null || interchange != null && interchange.names.indexOf(name) < 0) {
                                     if (!shouldHidden(hiddenValues, name, dp[name])) {
-                                        if ($.isNumeric(row[dp[name]])) {
-                                            row[name] = row[name] + dp[name];
-                                        } else {
-                                            if (row[name]) {
-                                                row[name] = row[name] + ", " + dp[name];
-                                            } else {
-                                                row[name] = dp[name];
-                                            }
-                                        }
+                                        row[name] = appendValues(row[name], dp[name]);
                                     }
                                 }
                             }

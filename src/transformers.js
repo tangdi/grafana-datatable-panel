@@ -224,11 +224,11 @@ transformers.json = {
 function getColumnInterchange(panel) {
     if (panel.interchange) {
         var array = panel.interchange.split(":");
-        if(array.length!=2){
+        if (array.length != 2) {
             return null;
         }
         return {
-            names:array[0].split(","),
+            names: array[0].split(","),
             values: array[1].split(",")
         };
 
@@ -249,34 +249,34 @@ function getGroupByColumns(panel) {
 
 function getTotalColumns(panel) {
     if (panel.total) {
-        var expressions =  panel.total.split(";");
-        if(expressions.length <1){
+        var expressions = panel.total.split(";");
+        if (expressions.length < 1) {
             return null;
         }
 
         var totalColumns = {
-            "columns":[],
-            "expressions":[]
+            "columns": [],
+            "expressions": []
         };
 
-        for(var i=0; i< expressions.length; i++){
-          var parameters =  expressions[i].split("=");
-          if(parameters.length!=2){
-              continue;
-          }
+        for (var i = 0; i < expressions.length; i++) {
+            var parameters = expressions[i].split("=");
+            if (parameters.length != 2) {
+                continue;
+            }
 
-         var operators = parameters[1].split("+");
-          if(operators.length>1){
-              totalColumns.columns.push(parameters[0]);
-              for(var j = 0; j < operators.length; j++){
-                  totalColumns.columns.push(operators[j]);
-              }
+            var operators = parameters[1].split("+");
+            if (operators.length > 1) {
+                totalColumns.columns.push(parameters[0]);
+                for (var j = 0; j < operators.length; j++) {
+                    totalColumns.columns.push(operators[j]);
+                }
 
-              totalColumns.expressions.push({
-                  "summay":parameters[0],
-                  "operators": operators
-              });
-          }
+                totalColumns.expressions.push({
+                    "summay": parameters[0],
+                    "operators": operators
+                });
+            }
 
 
         }
@@ -318,12 +318,27 @@ function transformDataToTable(data, panel) {
     return model;
 }
 
-function getInterchangeColummnName(interchange,dp){
+function getInterchangeColummnName(interchange, dp) {
     var columnsName = [];
-    for(var w = 0; w < interchange.names.length; w++){
+    for (var w = 0; w < interchange.names.length; w++) {
         columnsName.push(dp[interchange.names[w]]);
     }
-   return columnsName.join("_");
+    return columnsName.join("_");
+}
+
+function appendValues(oldValue, newValue) {
+    if (!oldValue) {
+        return newValue;
+    }
+    if ($.isNumeric(oldValue)) {
+        return oldValue + newValue;
+    } else {
+        if (oldValue.indexOf(newValue + ",") < 0 && oldValue.indexOf("," + newValue)) {
+            return oldValue + ", " + newValue;
+        } else {
+            return oldValue;
+        }
+    }
 }
 
 function groupby(data, panel) {
@@ -349,32 +364,15 @@ function groupby(data, panel) {
                     //append to key
                     for (var name in dp) {
                         if (groupBys.indexOf(name) < 0) {
-                            if (interchange!=null && interchange.values.indexOf(name)>=0) {
+                            //need interchange row and column
+                            if (interchange != null && interchange.values.indexOf(name) >= 0) {
                                 if (!shouldHidden(hiddenValues, name, dp[name])) {
-                                    var columnName = getInterchangeColummnName(interchange,dp);
-                                    if ($.isNumeric(row[columnName])) {
-                                        row[columnName] = row[columnName] + dp[name];
-                                    } else {
-                                        if (row[columnName]) {
-                                            row[columnName] = row[columnName] + ", " + dp[name];
-                                        } else {
-                                            row[columnName] = dp[name];
-                                        }
-
-                                    }
+                                    var columnName = getInterchangeColummnName(interchange, dp);
+                                    row[columnName] = appendValues(row[columnName], dp[name]);
                                 }
-                            } else if (interchange ==null || (interchange!=null && interchange.names.indexOf(name)<0)) {
+                            } else if (interchange == null || (interchange != null && interchange.names.indexOf(name) < 0)) {
                                 if (!shouldHidden(hiddenValues, name, dp[name])) {
-                                    if ($.isNumeric(row[dp[name]])) {
-                                        row[name] = row[name] + dp[name];
-                                    } else {
-                                        if (row[name]) {
-                                            row[name] = row[name] + ", " + dp[name];
-                                        } else {
-                                            row[name] = dp[name];
-                                        }
-
-                                    }
+                                    row[name] = appendValues(row[name], dp[name]);
                                 }
                             }
                         }
@@ -382,7 +380,7 @@ function groupby(data, panel) {
                 } else {
                     //first create key
                     row = {};
-                    if(totals!=null){
+                    if (totals != null) {
                         for (var x = 0; x < totals.columns.length; x++) {
                             row[totals.columns[x]] = 0;
                         }
@@ -392,11 +390,11 @@ function groupby(data, panel) {
                     for (var name1 in dp) {
                         if (groupBys.indexOf(name1) > -1) {
                             row[name1] = dp[name1];
-                        } else if (interchange != null && interchange.values.indexOf(name1)>=0 ) {
+                        } else if (interchange != null && interchange.values.indexOf(name1) >= 0) {
                             if (!shouldHidden(hiddenValues, name1, dp[interchange[1]])) {
-                                row[getInterchangeColummnName(interchange,dp)] = dp[name1];
+                                row[getInterchangeColummnName(interchange, dp)] = dp[name1];
                             }
-                        }else if(interchange ==null || (interchange!=null && interchange.names.indexOf(name1)<0)) {
+                        } else if (interchange == null || (interchange != null && interchange.names.indexOf(name1) < 0)) {
                             if (!shouldHidden(hiddenValues, name1, dp[name1])) {
                                 row[name1] = dp[name1];
                             }
@@ -407,7 +405,7 @@ function groupby(data, panel) {
             series.datapoints = [];
             for (var name2 in map) {
                 var newRow = map[name2];
-                if(totals!=null&&totals.expressions!=null){
+                if (totals != null && totals.expressions != null) {
                     for (var z = 0; z < totals.expressions.length; z++) {
                         for (var a = 0; a < totals.expressions[z].operators.length; a++) {
                             newRow[totals.expressions[z].summay] += newRow[totals.expressions[z].operators[a]];
@@ -417,8 +415,6 @@ function groupby(data, panel) {
                 series.datapoints.push(newRow);
             }
         }
-
-
     }
 }
 
