@@ -43,16 +43,41 @@
 		</div>
 		<div class="gf-form-inline">
 			<div class="gf-form">
-				<label class="gf-form-label">Column interchange<tip>Format: title_column:value_column</tip></label>
+				<label class="gf-form-label">Column interchange<tip>Format: title_column1,title_column2:value_column</tip></label>
 				<input type="text" class="gf-form-input" ng-model="ctrl.panel.interchange" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
 			</div>
 			<div class="gf-form">
 				<label class="gf-form-label">Hidden value<tip>Format: column1_name:hidden_value1;column2_name:hidden_value2;...</tip></label>
 				<input type="text" class="gf-form-input" ng-model="ctrl.panel.hiddenValues" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
 			</div>
+		</div>
+		<div class="gf-form-inline">
 			<div class="gf-form">
-				<label class="gf-form-label">Total<tip>Format: addends_column1;addends_column2,...</tip></label>
-				<input type="text" class="gf-form-input" ng-model="ctrl.panel.total" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+				<label class="gf-form-label">Total<tip>Format: total_column1=column1+column2+column3;total_column2=column2+column3+column4;...</tip></label>
+				<input type="text" class="gf-form-input width-50" ng-model="ctrl.panel.total" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+			</div>
+			<div class="gf-form">
+				<label class="gf-form-label">Difference<tip>Format: diff_column1=column1-column2-column3;diff_column2=column2-column3;...</tip></label>
+				<input type="text" class="gf-form-input width-50" ng-model="ctrl.panel.difference" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+			</div>
+			<div class="gf-form">
+				<label class="gf-form-label">Rate<tip>Format: rate_column1=column1/column2;rate_column2=column3/column4;...</tip></label>
+				<input type="text" class="gf-form-input width-50" ng-model="ctrl.panel.rate" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="editor-row">
+	<div class="section gf-form-group">
+		<h5 class="section-heading">Order</h5>
+		<div class="gf-form-inline">
+			<div class="gf-form">
+				<label class="gf-form-label">Default OderBy</label>
+				<input type="text" class="gf-form-input" ng-model="ctrl.panel.sortField" bs-typeahead="ctrl.getColumnNames" ng-blur="ctrl.render()" data-min-length=0 data-items=100 ng-model-onblur>
+			</div>
+			<div class="gf-form-select-wrapper max-width-15">
+				<select class="gf-form-input" ng-model="ctrl.panel.sortDirection" ng-options="o as o for o in ctrl.sortDirections"></select>
 			</div>
 		</div>
 	</div>

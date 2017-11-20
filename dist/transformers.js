@@ -30,9 +30,9 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
         return groupBys;
     }
 
-    function getTotalColumns(panel) {
-        if (panel.total) {
-            var expressions = panel.total.split(";");
+    function getCalculateColumns(expression, operator) {
+        if (expression) {
+            var expressions = expression.split(";");
             if (expressions.length < 1) {
                 return null;
             }
@@ -48,7 +48,7 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                     continue;
                 }
 
-                var operators = parameters[1].split("+");
+                var operators = parameters[1].split(operator);
                 if (operators.length > 1) {
                     totalColumns.columns.push(parameters[0]);
                     for (var j = 0; j < operators.length; j++) {
@@ -56,12 +56,11 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                     }
 
                     totalColumns.expressions.push({
-                        "summay": parameters[0],
+                        "result": parameters[0],
                         "operators": operators
                     });
                 }
             }
-
             return totalColumns;
         } else {
             return null;
@@ -122,12 +121,45 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
         }
     }
 
+    function initRow(row, expressions) {
+        if (expressions != null) {
+            for (var x = 0; x < expressions.columns.length; x++) {
+                if (!row[expressions.columns[x]]) {
+                    row[expressions.columns[x]] = 0;
+                }
+            }
+        }
+    }
+
+    function calculateRow(row, expressions, operator) {
+        if (expressions != null && expressions.expressions != null) {
+            for (var z = 0; z < expressions.expressions.length; z++) {
+                row[expressions.expressions[z].result] = row[expressions.expressions[z].operators[0]];
+                for (var a = 1; a < expressions.expressions[z].operators.length; a++) {
+                    if (operator === "+") {
+                        row[expressions.expressions[z].result] += row[expressions.expressions[z].operators[a]];
+                    } else if (operator === "-") {
+                        row[expressions.expressions[z].result] -= row[expressions.expressions[z].operators[a]];
+                    } else if (operator === "/") {
+                        if (row[expressions.expressions[z].operators[a]] == 0) {
+                            row[expressions.expressions[z].result] = 0;
+                        } else {
+                            row[expressions.expressions[z].result] /= row[expressions.expressions[z].operators[a]];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function groupby(data, panel) {
         if (panel.groupBy && panel.groupBy.length > 0) {
             var map = {};
             var interchange = getColumnInterchange(panel);
             var groupBys = getGroupByColumns(panel);
-            var totals = getTotalColumns(panel);
+            var totals = getCalculateColumns(panel.total, "+");
+            var diffs = getCalculateColumns(panel.difference, "-");
+            var rates = getCalculateColumns(panel.rate, "/");
             var hiddenValues = getHiddenValues(panel);
 
             for (var i = 0; i < data.length; i++) {
@@ -161,11 +193,9 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                     } else {
                         //first create key
                         row = {};
-                        if (totals != null) {
-                            for (var x = 0; x < totals.columns.length; x++) {
-                                row[totals.columns[x]] = 0;
-                            }
-                        }
+                        initRow(row, totals);
+                        initRow(row, diffs);
+                        initRow(row, rates);
 
                         map[key] = row;
                         for (var name1 in dp) {
@@ -186,13 +216,10 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                 series.datapoints = [];
                 for (var name2 in map) {
                     var newRow = map[name2];
-                    if (totals != null && totals.expressions != null) {
-                        for (var z = 0; z < totals.expressions.length; z++) {
-                            for (var a = 0; a < totals.expressions[z].operators.length; a++) {
-                                newRow[totals.expressions[z].summay] += newRow[totals.expressions[z].operators[a]];
-                            }
-                        }
-                    }
+                    calculateRow(newRow, totals, "+");
+                    calculateRow(newRow, rates, "/");
+                    calculateRow(newRow, diffs, "-");
+
                     series.datapoints.push(newRow);
                 }
             }

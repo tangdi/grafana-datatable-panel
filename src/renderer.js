@@ -404,7 +404,14 @@ export class DatatableRenderer {
     }
     var panelHeight = this.panel.panelHeight;
     let orderSetting = [[0, 'desc']];
-    if (this.panel.rowNumbersEnabled) {
+    if(this.panel.sortField !== null){
+        for(var i = 0;i < this.panel.columns.length;i++){
+          if(this.panel.columns[i].value === this.panel.sortField){
+              orderSetting = [[i, this.panel.sortDirection]];
+              break;
+          }
+        }
+    }else if (this.panel.rowNumbersEnabled) {
       // when row numbers are enabled, show them ascending
       orderSetting = [[0, 'asc']];
     }

@@ -270,16 +270,16 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                 "width": "1%"
               });
             }
-            for (var i = 0; i < this.table.columns.length; i++) {
+            for (var _i = 0; _i < this.table.columns.length; _i++) {
               /* jshint loopfunc: true */
-              var style = this.getStyleForColumn(i);
+              var style = this.getStyleForColumn(_i);
 
               columns.push({
-                title: style != void 0 && style.header != void 0 ? style.header : this.table.columns[i].text,
-                type: this.table.columns[i].type
+                title: style != void 0 && style.header != void 0 ? style.header : this.table.columns[_i].text,
+                type: this.table.columns[_i].type
               });
               columnDefs.push({
-                "targets": i + rowNumberOffset,
+                "targets": _i + rowNumberOffset,
                 "createdCell": function createdCell(td, cellData, rowData, row, col) {
                   // hidden columns have null data
                   if (cellData === null) return;
@@ -414,7 +414,14 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
             }
             var panelHeight = this.panel.panelHeight;
             var orderSetting = [[0, 'desc']];
-            if (this.panel.rowNumbersEnabled) {
+            if (this.panel.sortField !== null) {
+              for (var i = 0; i < this.panel.columns.length; i++) {
+                if (this.panel.columns[i].value === this.panel.sortField) {
+                  orderSetting = [[i, this.panel.sortDirection]];
+                  break;
+                }
+              }
+            } else if (this.panel.rowNumbersEnabled) {
               // when row numbers are enabled, show them ascending
               orderSetting = [[0, 'asc']];
             }
@@ -447,9 +454,9 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
             var newDT = $('#datatable-panel-table-' + this.panel.id).DataTable(tableOptions);
 
             // hide columns that are marked hidden
-            for (var _i = 0; _i < this.table.columns.length; _i++) {
-              if (this.table.columns[_i].hidden) {
-                newDT.column(_i + rowNumberOffset).visible(false);
+            for (var _i2 = 0; _i2 < this.table.columns.length; _i2++) {
+              if (this.table.columns[_i2].hidden) {
+                newDT.column(_i2 + rowNumberOffset).visible(false);
               }
             }
 

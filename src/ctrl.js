@@ -94,6 +94,7 @@ const panelDefaults = {
         col: 0,
         desc: true
     },
+    sortDirection: 'desc',
     datatableTheme: 'basic_theme',
     themeOptions: {
         light: './css/datatable-light.css',
@@ -232,6 +233,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
                 value: 'MMMM D, YYYY LT'
             },
         ];
+        this.sortDirections = ["desc","asc"];
         // this is used from bs-typeahead and needs to be instance bound
         this.getColumnNames = () => {
             if (!this.table) {

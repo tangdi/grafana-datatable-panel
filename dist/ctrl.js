@@ -125,6 +125,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     col: 0,
                     desc: true
                 },
+                sortDirection: 'desc',
                 datatableTheme: 'basic_theme',
                 themeOptions: {
                     light: './css/datatable-light.css',
@@ -239,6 +240,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         text: 'MMMM D, YYYY LT',
                         value: 'MMMM D, YYYY LT'
                     }];
+                    _this2.sortDirections = ["desc", "asc"];
                     // this is used from bs-typeahead and needs to be instance bound
                     _this2.getColumnNames = function () {
                         if (!_this2.table) {
