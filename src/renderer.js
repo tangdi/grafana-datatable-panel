@@ -407,7 +407,11 @@ export class DatatableRenderer {
     if(this.panel.sortField !== null){
         for(var i = 0;i < this.panel.columns.length;i++){
           if(this.panel.columns[i].value === this.panel.sortField){
-              orderSetting = [[i, this.panel.sortDirection]];
+              if(this.panel.rowNumbersEnabled){
+                  orderSetting = [[i+1, this.panel.sortDirection]];
+              }else{
+                  orderSetting = [[i, this.panel.sortDirection]];
+              }
               break;
           }
         }

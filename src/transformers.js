@@ -327,7 +327,7 @@ function appendValues(oldValue, newValue) {
     if (!oldValue) {
         return newValue;
     }
-    if ($.isNumeric(oldValue)) {
+    if ($.isNumeric(newValue)) {
         return oldValue + newValue;
     } else {
         if (oldValue.indexOf(newValue + ",") < 0 && oldValue.indexOf("," + newValue)) {
@@ -354,17 +354,27 @@ function calculateRow(row, expressions, operator) {
             row[expressions.expressions[z].result] = row[expressions.expressions[z].operators[0]];
             for (var a = 1; a < expressions.expressions[z].operators.length; a++) {
                 if (operator === "+") {
-                    row[expressions.expressions[z].result] += row[expressions.expressions[z].operators[a]];
+                    if(row[expressions.expressions[z].operators[a]]){
+                        if(row[expressions.expressions[z].result]){
+                            row[expressions.expressions[z].result] += row[expressions.expressions[z].operators[a]];
+                        }else{
+                            row[expressions.expressions[z].result] = row[expressions.expressions[z].operators[a]];
+                        }
+
+                    }
                 } else if (operator === "-") {
-                    row[expressions.expressions[z].result] -= row[expressions.expressions[z].operators[a]];
+                    if(row[expressions.expressions[z].result]&&row[expressions.expressions[z].operators[a]]) {
+                        row[expressions.expressions[z].result] -= row[expressions.expressions[z].operators[a]];
+                    }
                 } else if (operator === "/") {
-                    if (row[expressions.expressions[z].operators[a]] == 0) {
-                        row[expressions.expressions[z].result] = 0;
-                    } else {
-                        row[expressions.expressions[z].result] /= row[expressions.expressions[z].operators[a]];
+                    if(row[expressions.expressions[z].result]&&row[expressions.expressions[z].operators[a]]) {
+                        if (row[expressions.expressions[z].operators[a]] === 0) {
+                            row[expressions.expressions[z].result] = 0;
+                        } else {
+                            row[expressions.expressions[z].result] /= row[expressions.expressions[z].operators[a]];
+                        }
                     }
                 }
-
             }
         }
     }
@@ -411,9 +421,9 @@ function groupby(data, panel) {
                 } else {
                     //first create key
                     row = {};
-                    initRow(row, totals);
-                    initRow(row, diffs);
-                    initRow(row, rates);
+                    //initRow(row, totals);
+                    //initRow(row, diffs);
+                    //initRow(row, rates);
 
                     map[key] = row;
                     for (var name1 in dp) {
