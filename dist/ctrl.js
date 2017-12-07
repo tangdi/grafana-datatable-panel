@@ -199,6 +199,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
 
                     _this2.addColumnSegment = uiSegmentSrv.newPlusButton();
                     _this2.addGroupBySegment = uiSegmentSrv.newPlusButton();
+                    _this2.addHiddenColumnBySegment = uiSegmentSrv.newPlusButton();
                     _this2.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
                     _this2.colorModes = [{
                         text: 'Disabled',
@@ -264,15 +265,24 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                             "datatables.net": _this2.getPanelPath() + "libs/datatables.net/js/jquery.dataTables.min",
                             "datatables.net-bs": _this2.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
                             "datatables.net-jqui": _this2.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
-                            "datatables.net-zf": _this2.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min"
+                            "datatables.net-zf": _this2.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                            "datatables.net-responsive": _this2.getPanelPath() + "libs/datatables.net-responsive/js/dataTables.responsive.min",
+                            "datatables.net-buttons": _this2.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons"
                         }
                     });
+
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-responsive/js/dataTables.responsive.min.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/dataTables.buttons.min.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.js');
 
                     // basic datatables theme
                     // alternative themes are disabled since they affect all datatable panels on same page currently
                     switch (_this2.panel.datatableTheme) {
                         case 'basic_theme':
                             System.import(_this2.getPanelPath() + 'libs/datatables.net-dt/css/jquery.dataTables.min.css!');
+                            System.import(_this2.getPanelPath() + 'libs/datatables.net-responsive-dt/css/responsive.dataTables.min.css!');
+                            System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
+
                             if (grafanaBootData.user.lightTheme) {
                                 System.import(_this2.getPanelPath() + _this2.panel.themeOptions.light + '!css');
                             } else {
@@ -490,6 +500,12 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         this.render();
                     }
                 }, {
+                    key: 'removeHiddenColumns',
+                    value: function removeHiddenColumns(column) {
+                        this.panel.hiddenColumns = _.without(this.panel.hiddenColumns, column);
+                        this.render();
+                    }
+                }, {
                     key: 'getColumnOptions',
                     value: function getColumnOptions() {
                         var _this3 = this;
@@ -540,6 +556,23 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         var plusButton = this.uiSegmentSrv.newPlusButton();
                         this.addGroupBySegment.html = plusButton.html;
                         this.addGroupBySegment.value = plusButton.value;
+                    }
+                }, {
+                    key: 'addHiddenColumn',
+                    value: function addHiddenColumn() {
+                        var columns = transformers[this.panel.transform].getColumns(this.dataRaw);
+                        var column = _.find(columns, {
+                            text: this.addHiddenColumnBySegment.value
+                        });
+
+                        if (column) {
+                            this.panel.hiddenColumns.push(column);
+                            this.render();
+                        }
+
+                        var plusButton = this.uiSegmentSrv.newPlusButton();
+                        this.addHiddenColumnBySegment.html = plusButton.html;
+                        this.addHiddenColumnBySegment.value = plusButton.value;
                     }
                 }, {
                     key: 'addColumnStyle',

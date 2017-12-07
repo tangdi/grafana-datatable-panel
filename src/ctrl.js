@@ -5,9 +5,6 @@ import kbn from 'app/core/utils/kbn';
 
 import * as FileExport from 'app/core/utils/file_export';
 import DataTable from './libs/datatables.net/js/jquery.dataTables.min.js';
-// import './libs/datatables.net-responsive/js/dataTables.responsive.js';
-// import './libs/datatables.net-buttons/js/dataTables.buttons.js';
-// import './libs/datatables.net-buttons/js/buttons.colVis.js';
 
 // this is needed for basic datatables.net theme
 //import './libs/datatables.net-dt/css/jquery.dataTables.min.css!';
@@ -177,6 +174,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
 
         this.addColumnSegment = uiSegmentSrv.newPlusButton();
         this.addGroupBySegment = uiSegmentSrv.newPlusButton();
+        this.addHiddenColumnBySegment = uiSegmentSrv.newPlusButton();
         this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
         this.colorModes = [
             {
@@ -233,7 +231,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
                 value: 'MMMM D, YYYY LT'
             },
         ];
-        this.sortDirections = ["desc","asc"];
+        this.sortDirections = ["desc", "asc"];
         // this is used from bs-typeahead and needs to be instance bound
         this.getColumnNames = () => {
             if (!this.table) {
@@ -258,14 +256,23 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
                 "datatables.net-bs": this.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
                 "datatables.net-jqui": this.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
                 "datatables.net-zf": this.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                "datatables.net-responsive": this.getPanelPath() + "libs/datatables.net-responsive/js/dataTables.responsive.min",
+                "datatables.net-buttons": this.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons"
             }
         });
+
+        System.import(this.getPanelPath() + 'libs/datatables.net-responsive/js/dataTables.responsive.min.js');
+        System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/dataTables.buttons.min.js');
+        System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.js');
 
         // basic datatables theme
         // alternative themes are disabled since they affect all datatable panels on same page currently
         switch (this.panel.datatableTheme) {
             case 'basic_theme':
                 System.import(this.getPanelPath() + 'libs/datatables.net-dt/css/jquery.dataTables.min.css!');
+                System.import(this.getPanelPath() + 'libs/datatables.net-responsive-dt/css/responsive.dataTables.min.css!');
+                System.import(this.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
+
                 if (grafanaBootData.user.lightTheme) {
                     System.import(this.getPanelPath() + this.panel.themeOptions.light + '!css');
                 } else {
@@ -472,6 +479,11 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
         this.render();
     }
 
+    removeHiddenColumns(column) {
+        this.panel.hiddenColumns = _.without(this.panel.hiddenColumns, column);
+        this.render();
+    }
+
     getColumnOptions() {
         if (!this.dataRaw) {
             return this.$q.when([]);
@@ -492,8 +504,8 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
         if (column) {
             this.panel.columns.push(column);
 
-        }else{
-            this.panel.columns.push({text: this.addColumnSegment.value,value: this.addColumnSegment.value});
+        } else {
+            this.panel.columns.push({text: this.addColumnSegment.value, value: this.addColumnSegment.value});
         }
         this.render();
 
@@ -516,6 +528,22 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
         var plusButton = this.uiSegmentSrv.newPlusButton();
         this.addGroupBySegment.html = plusButton.html;
         this.addGroupBySegment.value = plusButton.value;
+    }
+
+    addHiddenColumn() {
+        var columns = transformers[this.panel.transform].getColumns(this.dataRaw);
+        var column = _.find(columns, {
+            text: this.addHiddenColumnBySegment.value
+        });
+
+        if (column) {
+            this.panel.hiddenColumns.push(column);
+            this.render();
+        }
+
+        var plusButton = this.uiSegmentSrv.newPlusButton();
+        this.addHiddenColumnBySegment.html = plusButton.html;
+        this.addHiddenColumnBySegment.value = plusButton.value;
     }
 
     addColumnStyle() {

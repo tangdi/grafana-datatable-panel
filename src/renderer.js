@@ -2,9 +2,7 @@ import $ from 'jquery';
 import kbn from 'app/core/utils/kbn';
 import moment from 'moment';
 import DataTable from './libs/datatables.net/js/jquery.dataTables.min.js';
-// import './libs/datatables.net-responsive/js/dataTables.responsive.js';
-// import './libs/datatables.net-buttons/js/dataTables.buttons.js';
-// import './libs/datatables.net-buttons/js/buttons.colVis.js';
+
 
 export class DatatableRenderer {
   constructor(panel, table, isUtc, sanitize, linkSrv) {
