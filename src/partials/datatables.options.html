@@ -109,7 +109,7 @@
                 <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
                     <label class="gf-form-label width-10">Hidden Columns</label>
                 </div>
-                <div class="gf-form" ng-repeat="column in ctrl.panel.hiddenColumns" ng-show="ctrl.panel.responsive.enable">
+                <div class="gf-form" ng-repeat="column in ctrl.panel.responsive.hiddenColumns" ng-show="ctrl.panel.responsive.enable">
                     <label class="gf-form-label">
                         <i class="pointer fa fa-remove" ng-click="ctrl.removeHiddenColumns(column)"></i>
                         <span>{{column.text}}</span>
@@ -214,7 +214,6 @@
                                 label="pageLength button"
                                 tooltip="Button collection that will control the DataTables' page length"
                                 checked="ctrl.panel.buttons.pageLength" on-change="ctrl.render()"></gf-form-switch>
-
             </div>
             <div class="gf-form-inline">
                 <gf-form-switch class="gf-form" label-class="width-14"

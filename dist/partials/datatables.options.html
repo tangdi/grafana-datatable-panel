@@ -109,7 +109,7 @@
                 <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
                     <label class="gf-form-label width-10">Hidden Columns</label>
                 </div>
-                <div class="gf-form" ng-repeat="column in ctrl.panel.hiddenColumns" ng-show="ctrl.panel.responsive.enable">
+                <div class="gf-form" ng-repeat="column in ctrl.panel.responsive.hiddenColumns" ng-show="ctrl.panel.responsive.enable">
                     <label class="gf-form-label">
                         <i class="pointer fa fa-remove" ng-click="ctrl.removeHiddenColumns(column)"></i>
                         <span>{{column.text}}</span>
@@ -130,11 +130,11 @@
                             label="Enable editor"
                             tooltip="Enable Editor for table"
                             checked="ctrl.panel.editor.enable" on-change="ctrl.render()"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-8"
+                <gf-form-switch class="gf-form" label-class="width-10"
                                 label="Enable create"
                                 tooltip="create a new row using Editor"
                                 checked="ctrl.panel.editor.create" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-8"
+                <gf-form-switch class="gf-form" label-class="width-10"
                                 label="Enable edit"
                                 tooltip="edit one or more existing rows using Editor"
                                 checked="ctrl.panel.editor.edit" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
@@ -142,11 +142,11 @@
                                 label="Enable editSingle"
                                 tooltip="edit an existing row using Editor"
                                 checked="ctrl.panel.editor.editSingle" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-8"
+                <gf-form-switch class="gf-form" label-class="width-10"
                                 label="Enable remove"
                                 tooltip="delete one or more rows using Editor"
                                 checked="ctrl.panel.editor.remove" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-12"
+                <gf-form-switch class="gf-form" label-class="width-14"
                                 label="Enable removeSingle"
                                 tooltip="delete a single row using Editor"
                                 checked="ctrl.panel.editor.removeSingle" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
@@ -214,7 +214,6 @@
                                 label="pageLength button"
                                 tooltip="Button collection that will control the DataTables' page length"
                                 checked="ctrl.panel.buttons.pageLength" on-change="ctrl.render()"></gf-form-switch>
-
             </div>
             <div class="gf-form-inline">
                 <gf-form-switch class="gf-form" label-class="width-14"

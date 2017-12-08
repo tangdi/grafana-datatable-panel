@@ -177,8 +177,44 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     value: 'themeroller_theme',
                     text: 'ThemeRoller',
                     disabled: true
-                }]
-
+                }],
+                responsive: {
+                    enable: false,
+                    hiddenColumns: []
+                },
+                editor: {
+                    enable: false,
+                    create: false,
+                    edit: false,
+                    editSingle: false,
+                    remove: false,
+                    removeSingle: false
+                },
+                buttons: {
+                    collection: false,
+                    columnsToggle: false,
+                    columnsVisibility: false,
+                    columnToggle: false,
+                    columnVisibility: false,
+                    colvis: false,
+                    colvisGroup: false,
+                    colvisRestore: false,
+                    copy: false,
+                    copyHtml5: false,
+                    print: false,
+                    pageLength: false,
+                    csv: false,
+                    csvHtml5: false,
+                    excel: false,
+                    excelHtml5: false,
+                    pdf: false,
+                    pdfHtml5: false,
+                    selectAll: false,
+                    selectNone: false,
+                    selectCells: false,
+                    selectColumns: false,
+                    selectRows: false
+                }
             };
 
             _export('DatatablePanelCtrl', DatatablePanelCtrl = function (_MetricsPanelCtrl) {
@@ -273,7 +309,10 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
 
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-responsive/js/dataTables.responsive.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/dataTables.buttons.min.js');
-                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.min.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.html5.min.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.print.min.js');
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-select/js/dataTables.select.min.js');
 
                     // basic datatables theme
                     // alternative themes are disabled since they affect all datatable panels on same page currently
@@ -502,7 +541,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                 }, {
                     key: 'removeHiddenColumns',
                     value: function removeHiddenColumns(column) {
-                        this.panel.hiddenColumns = _.without(this.panel.hiddenColumns, column);
+                        this.panel.responsive.hiddenColumns = _.without(this.panel.responsive.hiddenColumns, column);
                         this.render();
                     }
                 }, {
@@ -566,7 +605,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         });
 
                         if (column) {
-                            this.panel.hiddenColumns.push(column);
+                            this.panel.responsive.hiddenColumns.push(column);
                             this.render();
                         }
 
