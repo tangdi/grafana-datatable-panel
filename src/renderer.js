@@ -370,6 +370,18 @@ export class DatatableRenderer {
                     }
                 }
             );
+
+           if(this.panel.lengthChangeEnabled&&this.panel.responsive.hiddenColumns){
+               for(let j= 0; j< this.panel.responsive.hiddenColumns.length; j++){
+                   if(this.panel.responsive.hiddenColumns[j].text===this.table.columns[i].text){
+                       if (this.panel.rowNumbersEnabled) {
+                           columnDefs.push({responsivePriority: 10000 + j, targets: i+1});
+                       }else{
+                           columnDefs.push({responsivePriority: 10000 + j, targets: i});
+                       }
+                   }
+               }
+           }
         }
 
         try {

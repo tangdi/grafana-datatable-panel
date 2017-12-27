@@ -382,6 +382,18 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                                     }
                                 }
                             });
+
+                            if (this.panel.lengthChangeEnabled && this.panel.responsive.hiddenColumns) {
+                                for (var j = 0; j < this.panel.responsive.hiddenColumns.length; j++) {
+                                    if (this.panel.responsive.hiddenColumns[j].text === this.table.columns[_i].text) {
+                                        if (this.panel.rowNumbersEnabled) {
+                                            columnDefs.push({ responsivePriority: 10000 + j, targets: _i + 1 });
+                                        } else {
+                                            columnDefs.push({ responsivePriority: 10000 + j, targets: _i });
+                                        }
+                                    }
+                                }
+                            }
                         }
 
                         try {
