@@ -296,6 +296,29 @@ function shouldHidden(hiddenValues, name, value) {
     return hiddenValues.indexOf(name + ":" + value) >= 0;
 }
 
+function splitCloumn(data, panel) {
+    if (panel.splitColumn && panel.splitColumn.length > 0 && panel.splitChar) {
+        for (var i = 0; i < panel.splitColumn.length; i++) {
+            var columnName = panel.splitColumn[0].value;
+            for (i = 0; i < data.length; i++) {
+                var series = data[i];
+                for (var y = 0; y < series.datapoints.length; y++) {
+                    var dp = series.datapoints[y];
+                    var columnValue = dp[columnName];
+                    if (columnValue) {
+                        var splitValues = columnValue.split(panel.splitChar);
+                        if (splitValues.length > 0) {
+                            for (var z = 0; z < splitValues.length; z++) {
+                                dp[columnName + "_" + z] = splitValues[z];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 function transformDataToTable(data, panel) {
     var model = new TableModel();
 
@@ -310,6 +333,9 @@ function transformDataToTable(data, panel) {
 
     //group by
     groupby(data, panel);
+
+    //split
+    splitCloumn(data, panel);
 
     transformer.transform(data, panel, model);
     return model;
@@ -354,20 +380,20 @@ function calculateRow(row, expressions, operator) {
             row[expressions.expressions[z].result] = row[expressions.expressions[z].operators[0]];
             for (var a = 1; a < expressions.expressions[z].operators.length; a++) {
                 if (operator === "+") {
-                    if(row[expressions.expressions[z].operators[a]]){
-                        if(row[expressions.expressions[z].result]){
+                    if (row[expressions.expressions[z].operators[a]]) {
+                        if (row[expressions.expressions[z].result]) {
                             row[expressions.expressions[z].result] += row[expressions.expressions[z].operators[a]];
-                        }else{
+                        } else {
                             row[expressions.expressions[z].result] = row[expressions.expressions[z].operators[a]];
                         }
 
                     }
                 } else if (operator === "-") {
-                    if(row[expressions.expressions[z].result]&&row[expressions.expressions[z].operators[a]]) {
+                    if (row[expressions.expressions[z].result] && row[expressions.expressions[z].operators[a]]) {
                         row[expressions.expressions[z].result] -= row[expressions.expressions[z].operators[a]];
                     }
                 } else if (operator === "/") {
-                    if(row[expressions.expressions[z].result]&&row[expressions.expressions[z].operators[a]]) {
+                    if (row[expressions.expressions[z].result] && row[expressions.expressions[z].operators[a]]) {
                         if (row[expressions.expressions[z].operators[a]] === 0) {
                             row[expressions.expressions[z].result] = 0;
                         } else {

@@ -70,6 +70,32 @@
 
 <div class="editor-row">
 	<div class="section gf-form-group">
+		<h5 class="section-heading">Split</h5>
+		<div class="gf-form-inline">
+			<div class="gf-form">
+				<label class="gf-form-label width-10">Split Solumns</label>
+			</div>
+			<div class="gf-form" ng-repeat="column in ctrl.panel.splitColumn">
+				<label class="gf-form-label">
+					<i class="pointer fa fa-remove" ng-click="ctrl.removeSplitColumn(column)"></i>
+					<span>{{column.text}}</span>
+				</label>
+			</div>
+			<div class="gf-form">
+				<metric-segment segment="ctrl.addSplitSegment" get-options="ctrl.getColumnOptions()" on-change="ctrl.addSplitColumn()"></metric-segment>
+			</div>
+		</div>
+		<div class="gf-form-inline">
+			<div class="gf-form">
+				<label class="gf-form-label">Split Character<tip>new columns is named as "column_index", for example: path_1,path_2... </tip></label>
+				<input type="text" class="gf-form-input" ng-model="ctrl.panel.splitChar"  ng-blur="ctrl.render()" data-min-length=0 ng-model-onblur>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="editor-row">
+	<div class="section gf-form-group">
 		<h5 class="section-heading">Order</h5>
 		<div class="gf-form-inline">
 			<div class="gf-form">

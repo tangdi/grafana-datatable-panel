@@ -118,6 +118,8 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                 }],
                 columns: [],
                 groupBy: [],
+                splitColumn: [],
+                splitChar: null,
                 scroll: false,
                 scrollHeight: 'default',
                 fontSize: '100%',
@@ -235,6 +237,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
 
                     _this2.addColumnSegment = uiSegmentSrv.newPlusButton();
                     _this2.addGroupBySegment = uiSegmentSrv.newPlusButton();
+                    _this2.addSplitSegment = uiSegmentSrv.newPlusButton();
                     _this2.addHiddenColumnBySegment = uiSegmentSrv.newPlusButton();
                     _this2.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
                     _this2.colorModes = [{
@@ -524,6 +527,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     value: function transformChanged() {
                         this.panel.columns = [];
                         this.panel.groupBy = [];
+                        this.panel.splitColumn = [];
                         this.render();
                     }
                 }, {
@@ -536,6 +540,12 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     key: 'removeGroupBy',
                     value: function removeGroupBy(column) {
                         this.panel.groupBy = _.without(this.panel.groupBy, column);
+                        this.render();
+                    }
+                }, {
+                    key: 'removeSplitColumn',
+                    value: function removeSplitColumn(column) {
+                        this.panel.splitColumn = _.without(this.panel.splitColumn, column);
                         this.render();
                     }
                 }, {
@@ -595,6 +605,23 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         var plusButton = this.uiSegmentSrv.newPlusButton();
                         this.addGroupBySegment.html = plusButton.html;
                         this.addGroupBySegment.value = plusButton.value;
+                    }
+                }, {
+                    key: 'addSplitColumn',
+                    value: function addSplitColumn() {
+                        var columns = transformers[this.panel.transform].getColumns(this.dataRaw);
+                        var column = _.find(columns, {
+                            text: this.addSplitSegment.value
+                        });
+
+                        if (column) {
+                            this.panel.splitColumn.push(column);
+                            this.render();
+                        }
+
+                        var plusButton = this.uiSegmentSrv.newPlusButton();
+                        this.addSplitSegment.html = plusButton.html;
+                        this.addSplitSegment.value = plusButton.value;
                     }
                 }, {
                     key: 'addHiddenColumn',

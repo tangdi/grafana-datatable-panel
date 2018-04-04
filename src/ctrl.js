@@ -84,6 +84,8 @@ const panelDefaults = {
     ],
     columns: [],
     groupBy: [],
+    splitColumn: [],
+    splitChar: null,
     scroll: false,
     scrollHeight: 'default',
     fontSize: '100%',
@@ -210,6 +212,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
 
         this.addColumnSegment = uiSegmentSrv.newPlusButton();
         this.addGroupBySegment = uiSegmentSrv.newPlusButton();
+        this.addSplitSegment = uiSegmentSrv.newPlusButton();
         this.addHiddenColumnBySegment = uiSegmentSrv.newPlusButton();
         this.fontSizes = ['80%', '90%', '100%', '110%', '120%', '130%', '150%', '160%', '180%', '200%', '220%', '250%'];
         this.colorModes = [
@@ -505,6 +508,7 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
     transformChanged() {
         this.panel.columns = [];
         this.panel.groupBy = [];
+        this.panel.splitColumn = [];
         this.render();
     }
 
@@ -515,6 +519,11 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
 
     removeGroupBy(column) {
         this.panel.groupBy = _.without(this.panel.groupBy, column);
+        this.render();
+    }
+
+    removeSplitColumn(column) {
+        this.panel.splitColumn = _.without(this.panel.splitColumn, column);
         this.render();
     }
 
@@ -567,6 +576,22 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
         var plusButton = this.uiSegmentSrv.newPlusButton();
         this.addGroupBySegment.html = plusButton.html;
         this.addGroupBySegment.value = plusButton.value;
+    }
+
+    addSplitColumn() {
+        var columns = transformers[this.panel.transform].getColumns(this.dataRaw);
+        var column = _.find(columns, {
+            text: this.addSplitSegment.value
+        });
+
+        if (column) {
+            this.panel.splitColumn.push(column);
+            this.render();
+        }
+
+        var plusButton = this.uiSegmentSrv.newPlusButton();
+        this.addSplitSegment.html = plusButton.html;
+        this.addSplitSegment.value = plusButton.value;
     }
 
     addHiddenColumn() {

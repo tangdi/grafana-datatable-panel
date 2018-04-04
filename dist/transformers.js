@@ -79,6 +79,29 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
         return hiddenValues.indexOf(name + ":" + value) >= 0;
     }
 
+    function splitCloumn(data, panel) {
+        if (panel.splitColumn && panel.splitColumn.length > 0 && panel.splitChar) {
+            for (var i = 0; i < panel.splitColumn.length; i++) {
+                var columnName = panel.splitColumn[0].value;
+                for (i = 0; i < data.length; i++) {
+                    var series = data[i];
+                    for (var y = 0; y < series.datapoints.length; y++) {
+                        var dp = series.datapoints[y];
+                        var columnValue = dp[columnName];
+                        if (columnValue) {
+                            var splitValues = columnValue.split(panel.splitChar);
+                            if (splitValues.length > 0) {
+                                for (var z = 0; z < splitValues.length; z++) {
+                                    dp[columnName + "_" + z] = splitValues[z];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     function transformDataToTable(data, panel) {
         var model = new TableModel();
 
@@ -93,6 +116,9 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
 
         //group by
         groupby(data, panel);
+
+        //split
+        splitCloumn(data, panel);
 
         transformer.transform(data, panel, model);
         return model;
