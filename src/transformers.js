@@ -296,22 +296,16 @@ function shouldHidden(hiddenValues, name, value) {
     return hiddenValues.indexOf(name + ":" + value) >= 0;
 }
 
-function splitCloumn(data, panel) {
+function splitColumn(dataPoint, panel) {
     if (panel.splitColumn && panel.splitColumn.length > 0 && panel.splitChar) {
         for (var i = 0; i < panel.splitColumn.length; i++) {
-            var columnName = panel.splitColumn[0].value;
-            for (i = 0; i < data.length; i++) {
-                var series = data[i];
-                for (var y = 0; y < series.datapoints.length; y++) {
-                    var dp = series.datapoints[y];
-                    var columnValue = dp[columnName];
-                    if (columnValue) {
-                        var splitValues = columnValue.split(panel.splitChar);
-                        if (splitValues.length > 0) {
-                            for (var z = 0; z < splitValues.length; z++) {
-                                dp[columnName + "_" + z] = splitValues[z];
-                            }
-                        }
+            var columnName = panel.splitColumn[i].value;
+            var columnValue = dataPoint[columnName];
+            if (columnValue) {
+                var splitValues = columnValue.split(panel.splitChar);
+                if (splitValues.length > 0) {
+                    for (var z = 0; z < splitValues.length; z++) {
+                        dataPoint[columnName + "_" + z] = splitValues[z];
                     }
                 }
             }
@@ -332,10 +326,7 @@ function transformDataToTable(data, panel) {
     }
 
     //group by
-    groupby(data, panel);
-
-    //split
-    splitCloumn(data, panel);
+    groupby(data, panel, splitColumn);
 
     transformer.transform(data, panel, model);
     return model;
@@ -406,9 +397,8 @@ function calculateRow(row, expressions, operator) {
     }
 }
 
-function groupby(data, panel) {
+function groupby(data, panel, dataPointCallBack) {
     if (panel.groupBy && panel.groupBy.length > 0) {
-        var map = {};
         var interchange = getColumnInterchange(panel);
         var groupBys = getGroupByColumns(panel);
         var totals = getCalculateColumns(panel.total, "+");
@@ -418,6 +408,7 @@ function groupby(data, panel) {
 
         for (var i = 0; i < data.length; i++) {
             var series = data[i];
+            var map = {};
             for (var y = 0; y < series.datapoints.length; y++) {
                 var dp = series.datapoints[y];
 
@@ -429,39 +420,35 @@ function groupby(data, panel) {
                 var row = map[key];
                 if (row) {
                     //append to key
-                    for (var name in dp) {
-                        if (groupBys.indexOf(name) < 0) {
-                            //need interchange row and column
-                            if (interchange != null && interchange.values.indexOf(name) >= 0) {
-                                if (!shouldHidden(hiddenValues, name, dp[name])) {
-                                    var columnName = getInterchangeColummnName(interchange, dp);
-                                    row[columnName] = appendValues(row[columnName], dp[name]);
-                                }
-                            } else if (interchange == null || (interchange != null && interchange.names.indexOf(name) < 0)) {
-                                if (!shouldHidden(hiddenValues, name, dp[name])) {
-                                    row[name] = appendValues(row[name], dp[name]);
-                                }
-                            }
-                        }
-                    }
                 } else {
                     //first create key
                     row = {};
-                    //initRow(row, totals);
-                    //initRow(row, diffs);
-                    //initRow(row, rates);
-
                     map[key] = row;
-                    for (var name1 in dp) {
-                        if (groupBys.indexOf(name1) > -1) {
-                            row[name1] = dp[name1];
-                        } else if (interchange != null && interchange.values.indexOf(name1) >= 0) {
-                            if (!shouldHidden(hiddenValues, name1, dp[interchange[1]])) {
-                                row[getInterchangeColummnName(interchange, dp)] = dp[name1];
+                    _.each(groupBys, function (key) {
+                        if (key in dp){
+                            row[key] = dp[key];
+                        }
+                    });
+                }
+                for (var name in dp) {
+                    if (groupBys.indexOf(name) < 0) {
+                        //need interchange row and column
+                        if (interchange != null && interchange.values.indexOf(name) >= 0) {
+                            if (!shouldHidden(hiddenValues, name, dp[name])) {
+                                var columnName = getInterchangeColummnName(interchange, dp);
+                                if(columnName in row){
+                                    row[columnName] = appendValues(row[columnName], dp[name]);
+                                }else{
+                                    row[columnName] = dp[name];
+                                }
                             }
-                        } else if (interchange == null || (interchange != null && interchange.names.indexOf(name1) < 0)) {
-                            if (!shouldHidden(hiddenValues, name1, dp[name1])) {
-                                row[name1] = dp[name1];
+                        } else if (interchange == null || interchange.names.indexOf(name) < 0) {
+                            if (!shouldHidden(hiddenValues, name, dp[name])) {
+                                if(name in row){
+                                    row[name] = appendValues(row[name], dp[name]);
+                                }else{
+                                    row[name] = dp[name];
+                                }
                             }
                         }
                     }
@@ -473,7 +460,7 @@ function groupby(data, panel) {
                 calculateRow(newRow, totals, "+");
                 calculateRow(newRow, rates, "/");
                 calculateRow(newRow, diffs, "-");
-
+                dataPointCallBack(newRow, panel);
                 series.datapoints.push(newRow);
             }
         }
