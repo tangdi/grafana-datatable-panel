@@ -449,6 +449,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     value: function render() {
                         this.table = transformDataToTable(this.dataRaw, this.panel);
                         this.table.sort(this.panel.sort);
+                        this.panel.emptyData = this.table.rows.length === 0 || this.table.columns.length === 0;
                         return _get(DatatablePanelCtrl.prototype.__proto__ || Object.getPrototypeOf(DatatablePanelCtrl.prototype), 'render', this).call(this, this.table);
                     }
                 }, {
