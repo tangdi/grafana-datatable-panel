@@ -252,6 +252,20 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                 }, {
                     key: 'render',
                     value: function render() {
+                        var tableHolderId = '#datatable-panel-table-' + this.panel.id;
+                        try {
+                            if ($.fn.dataTable.isDataTable(tableHolderId)) {
+                                var aDT = $(tableHolderId).DataTable();
+                                aDT.destroy();
+                                $(tableHolderId).empty();
+                            }
+                        } catch (err) {
+                            console.log("Exception: " + err.message);
+                        }
+
+                        if (this.panel.emptyData) {
+                            return;
+                        }
                         if (this.table.columns.length === 0) return;
                         var columns = [];
                         var columnDefs = [];
@@ -396,19 +410,6 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                             }
                         }
 
-                        try {
-                            var should_destroy = false;
-                            if ($.fn.dataTable.isDataTable('#datatable-panel-table-' + this.panel.id)) {
-                                should_destroy = true;
-                            }
-                            if (should_destroy) {
-                                var aDT = $('#datatable-panel-table-' + this.panel.id).DataTable();
-                                aDT.destroy();
-                                $('#datatable-panel-table-' + this.panel.id).empty();
-                            }
-                        } catch (err) {
-                            console.log("Exception: " + err.message);
-                        }
                         // sanity check
                         // annotations come back as 4 items in an array per row. If the first row content is undefined, then modify to empty
                         // since datatables.net throws errors
