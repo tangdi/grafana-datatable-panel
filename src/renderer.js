@@ -432,7 +432,7 @@ export class DatatableRenderer {
         }
 
         var tableOptions = {
-            "lengthMenu": [[5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 25, 50, 75, 100, "All"]],
+            "lengthMenu": [[5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 15, 25, 50, 75, 100, "All"]],
             searching: this.panel.searchEnabled,
             info: this.panel.infoEnabled,
             lengthChange: this.panel.lengthChangeEnabled,
@@ -446,7 +446,6 @@ export class DatatableRenderer {
             },
             "order": orderSetting,
             responsive: this.panel.responsive.enable,
-            dom: 'Bfrtip',
             buttons: []
         };
         if (this.panel.scroll) {
