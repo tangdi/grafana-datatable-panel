@@ -200,17 +200,16 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                     }
 
                     var row = map[key];
-                    if (row) {
-                        //append to key
-                    } else {
+                    if (!row) {
                         //first create key
                         row = {};
                         map[key] = row;
-                        _.each(groupBys, function (key) {
-                            if (key in dp) {
-                                row[key] = dp[key];
+                        for (var m = 0; m < groupBys.length; m++) {
+                            var groupBy = groupBys[m];
+                            if (groupBy in dp) {
+                                row[groupBy] = dp[groupBy];
                             }
-                        });
+                        }
                     }
                     for (var name in dp) {
                         if (groupBys.indexOf(name) < 0) {

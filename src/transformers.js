@@ -410,7 +410,7 @@ function groupby(data, panel, dataPointCallBack) {
             var series = data[i];
             var map = {};
             for (var y = 0; y < series.datapoints.length; y++) {
-                var dp = series.datapoints[y];
+                const dp = series.datapoints[y];
 
                 var key = "";
                 for (var n = 0; n < groupBys.length; n++) {
@@ -418,17 +418,16 @@ function groupby(data, panel, dataPointCallBack) {
                 }
 
                 var row = map[key];
-                if (row) {
-                    //append to key
-                } else {
+                if (!row)  {
                     //first create key
                     row = {};
                     map[key] = row;
-                    _.each(groupBys, function (key) {
-                        if (key in dp){
-                            row[key] = dp[key];
+                    for (var m = 0; m < groupBys.length; m++){
+                        var groupBy = groupBys[m];
+                        if (groupBy in dp){
+                            row[groupBy] = dp[groupBy];
                         }
-                    });
+                    }
                 }
                 for (var name in dp) {
                     if (groupBys.indexOf(name) < 0) {
