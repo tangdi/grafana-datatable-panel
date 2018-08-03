@@ -12,9 +12,13 @@
         </div>
         <div class="gf-form">
             <gf-form-switch class="gf-form" label-class="width-8"
-                            label="Scroll"
+                            label="ScrollY"
                             tooltip="Scroll instead of paging"
                             checked="ctrl.panel.scroll" on-change="ctrl.render()"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-8"
+                            label="ScrollX"
+                            tooltip="Scroll instead of paging"
+                            checked="ctrl.panel.scrollx" on-change="ctrl.render()"></gf-form-switch>
         </div>
 
         <div ng-if="!ctrl.panel.scroll">
@@ -35,6 +39,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="section gf-form-group">
@@ -106,23 +111,23 @@
                             label="Enable responsive"
                             tooltip="Enable responsive model for table"
                             checked="ctrl.panel.responsive.enable" on-change="ctrl.render()"></gf-form-switch>
-                <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
-                    <label class="gf-form-label width-10">Hidden Columns</label>
-                </div>
-                <div class="gf-form" ng-repeat="column in ctrl.panel.responsive.hiddenColumns" ng-show="ctrl.panel.responsive.enable">
-                    <label class="gf-form-label">
-                        <i class="pointer fa fa-remove" ng-click="ctrl.removeHiddenColumns(column)"></i>
-                        <span>{{column.text}}</span>
-                    </label>
-                </div>
-                <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
-                    <metric-segment segment="ctrl.addHiddenColumnBySegment" get-options="ctrl.getColumnOptions()" on-change="ctrl.addHiddenColumn()"></metric-segment>
-                </div>
+            <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
+                <label class="gf-form-label width-10">Hidden Columns</label>
             </div>
+            <div class="gf-form" ng-repeat="column in ctrl.panel.responsive.hiddenColumns"
+                 ng-show="ctrl.panel.responsive.enable">
+                <label class="gf-form-label">
+                    <i class="pointer fa fa-remove" ng-click="ctrl.removeHiddenColumns(column)"></i>
+                    <span>{{column.text}}</span>
+                </label>
+            </div>
+            <div class="gf-form" ng-show="ctrl.panel.responsive.enable">
+                <metric-segment segment="ctrl.addHiddenColumnBySegment" get-options="ctrl.getColumnOptions()"
+                                on-change="ctrl.addHiddenColumn()"></metric-segment>
+            </div>
+        </div>
     </div>
-</div>
 
-<div class="editor-row">
     <div class="section gf-form-group">
         <h5 class="section-heading">Editor Settings</h5>
         <div class="gf-form">
@@ -130,26 +135,31 @@
                             label="Enable editor"
                             tooltip="Enable Editor for table"
                             checked="ctrl.panel.editor.enable" on-change="ctrl.render()"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-10"
-                                label="Enable create"
-                                tooltip="create a new row using Editor"
-                                checked="ctrl.panel.editor.create" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-10"
-                                label="Enable edit"
-                                tooltip="edit one or more existing rows using Editor"
-                                checked="ctrl.panel.editor.edit" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-12"
-                                label="Enable editSingle"
-                                tooltip="edit an existing row using Editor"
-                                checked="ctrl.panel.editor.editSingle" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-10"
-                                label="Enable remove"
-                                tooltip="delete one or more rows using Editor"
-                                checked="ctrl.panel.editor.remove" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
-                <gf-form-switch class="gf-form" label-class="width-14"
-                                label="Enable removeSingle"
-                                tooltip="delete a single row using Editor"
-                                checked="ctrl.panel.editor.removeSingle" on-change="ctrl.render()" ng-show="ctrl.panel.editor.enable"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-10"
+                            label="Enable create"
+                            tooltip="create a new row using Editor"
+                            checked="ctrl.panel.editor.create" on-change="ctrl.render()"
+                            ng-show="ctrl.panel.editor.enable"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-10"
+                            label="Enable edit"
+                            tooltip="edit one or more existing rows using Editor"
+                            checked="ctrl.panel.editor.edit" on-change="ctrl.render()"
+                            ng-show="ctrl.panel.editor.enable"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-12"
+                            label="Enable editSingle"
+                            tooltip="edit an existing row using Editor"
+                            checked="ctrl.panel.editor.editSingle" on-change="ctrl.render()"
+                            ng-show="ctrl.panel.editor.enable"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-10"
+                            label="Enable remove"
+                            tooltip="delete one or more rows using Editor"
+                            checked="ctrl.panel.editor.remove" on-change="ctrl.render()"
+                            ng-show="ctrl.panel.editor.enable"></gf-form-switch>
+            <gf-form-switch class="gf-form" label-class="width-14"
+                            label="Enable removeSingle"
+                            tooltip="delete a single row using Editor"
+                            checked="ctrl.panel.editor.removeSingle" on-change="ctrl.render()"
+                            ng-show="ctrl.panel.editor.enable"></gf-form-switch>
         </div>
     </div>
 </div>
@@ -269,6 +279,62 @@
     </div>
 </div>
 
+<div class="editor-row">
+    <div class="section gf-form-group">
+        <h5 class="section-heading">Columns Settings</h5>
+        <div class="gf-form">
+            <div class="gf-form-inline">
+                <div class="gf-form  max-width-18">
+                    <label class="gf-form-label width-11">Left Fixed Columns</label>
+                    <input type="text" class="gf-form-input"
+                           placeholder="0" data-placement="right"
+                           ng-model="ctrl.panel.leftColumns"
+                           ng-change="ctrl.render()"
+                           ng-model-onblur>
+                </div>
+                <div class="gf-form max-width-18">
+                    <label class="gf-form-label width-11">Right Fixed Columns</label>
+                    <input type="text" class="gf-form-input"
+                           placeholder="0" data-placement="right"
+                           ng-model="ctrl.panel.rightColumns"
+                           ng-change="ctrl.render()"
+                           ng-model-onblur>
+                </div>
+            </div>
+            <div class="gf-form-inline">
+                <gf-form-switch class="gf-form" label-class="width-14"
+                                label="Hide Empty columns"
+                                tooltip="Hide all (or specified) columns if no cells in the column(s) are populated with any values"
+                                checked="ctrl.panel.hideEmptyCols.enable"
+                                on-change="ctrl.render()"></gf-form-switch>
+                <gf-form-switch ng-if="ctrl.panel.hideEmptyCols.enable" class="gf-form" label-class="width-14"
+                                label="Trim Empty"
+                                tooltip="Trim the values before determining if the cell is empty"
+                                checked="ctrl.panel.hideEmptyCols.trim"
+                                on-change="ctrl.render()"></gf-form-switch>
+                <gf-form-switch ng-if="ctrl.panel.hideEmptyCols.enable" class="gf-form" label-class="width-14"
+                                label="Empty PerPage"
+                                tooltip="Only hide column(s) if they're empty on the current page (executes on necessary events)"
+                                checked="ctrl.panel.hideEmptyCols.perPage"
+                                on-change="ctrl.render()"></gf-form-switch>
+                <gf-form-switch ng-if="ctrl.panel.hideEmptyCols.enable" class="gf-form" label-class="width-14"
+                                label="Empty onStateLoad"
+                                tooltip="Determine if the column visibility should be set when the DataTables stateLoadParams event is fired (when saveState is enabled)"
+                                checked="ctrl.panel.hideEmptyCols.onStateLoad"
+                                on-change="ctrl.render()"></gf-form-switch>
+                <div class="gf-form">
+                    <label class="gf-form-label width-8">Empty values</label>
+                    <input type="text" class="gf-form-input"
+                           placeholder="N/A" data-placement="right"
+                           ng-model="ctrl.panel.hideEmptyCols.emptyVals"
+                           ng-change="ctrl.render()"
+                           ng-model-onblur>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 <div class="editor-row">
     <div class="section gf-form-group">
         <h5 class="section-heading">Theme Settings</h5>

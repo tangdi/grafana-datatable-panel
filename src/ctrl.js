@@ -60,6 +60,7 @@ import {
 } from './transformers';
 
 import {DatatableRenderer} from './renderer';
+import './hideEmptyColumns';
 
 const panelDefaults = {
     targets: [{}],
@@ -87,6 +88,7 @@ const panelDefaults = {
     splitColumn: [],
     splitChar: null,
     scroll: false,
+    scrollx: false,
     scrollHeight: 'default',
     fontSize: '100%',
     sort: {
@@ -194,6 +196,12 @@ const panelDefaults = {
         selectCells: false,
         selectColumns: false,
         selectRows: false
+    },
+    hideEmptyCols: {
+        enable: false,
+        trim: true,
+        perPage: false,
+        onStateLoad: true,
     }
 };
 
@@ -291,22 +299,24 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
 
         System.config({
             paths: {
+
                 "datatables.net": this.getPanelPath() + "libs/datatables.net/js/jquery.dataTables.min",
-                "datatables.net-bs": this.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
-                "datatables.net-jqui": this.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
-                "datatables.net-zf": this.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                // "datatables.net-bs": this.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
+                // "datatables.net-jqui": this.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
+                // "datatables.net-zf": this.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                "datatables.net-fixedcolumns": this.getPanelPath() + "libs/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min",
                 "datatables.net-responsive": this.getPanelPath() + "libs/datatables.net-responsive/js/dataTables.responsive.min",
-                "datatables.net-buttons": this.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons"
+                "datatables.net-buttons": this.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons.min"
             }
         });
 
+        System.import(this.getPanelPath() + 'libs/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js');
         System.import(this.getPanelPath() + 'libs/datatables.net-responsive/js/dataTables.responsive.min.js');
         System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/dataTables.buttons.min.js');
         System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.min.js');
         System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.html5.min.js');
         System.import(this.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.print.min.js');
-        System.import(this.getPanelPath() + 'libs/datatables.net-select/js/dataTables.select.min.js');
-
+        // System.import(this.getPanelPath() + 'libs/datatables.net-select/js/dataTables.select.min.js');
         // basic datatables theme
         // alternative themes are disabled since they affect all datatable panels on same page currently
         switch (this.panel.datatableTheme) {

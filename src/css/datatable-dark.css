@@ -213,7 +213,8 @@ table.dataTable td {
   *zoom: 1;
   zoom: 1; }
   .dataTables_wrapper .dataTables_length {
-    float: left; }
+    float: left;
+    padding-right: 0.755em;}
   .dataTables_wrapper .dataTables_filter {
     float: right;
     text-align: right; }
@@ -359,3 +360,6 @@ table.dataTable td {
     text-align: center; }
   .dataTables_wrapper .dataTables_filter {
     margin-top: 0.5em; } }
+
+.DTFC_LeftHeadWrapper {
+  background-color: #1f1d1d;}

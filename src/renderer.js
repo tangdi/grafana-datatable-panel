@@ -433,6 +433,7 @@ export class DatatableRenderer {
         }
 
         var tableOptions = {
+            dom: "lBfrtip",
             "lengthMenu": [[5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 15, 25, 50, 75, 100, "All"]],
             searching: this.panel.searchEnabled,
             info: this.panel.infoEnabled,
@@ -447,14 +448,32 @@ export class DatatableRenderer {
             },
             "order": orderSetting,
             responsive: this.panel.responsive.enable,
-            buttons: []
+            buttons: [],
+            fixedColumns: {
+                leftColumns: 0,
+                rightColumns: 0
+            }
         };
+
         if (this.panel.scroll) {
             tableOptions.paging = false;
             tableOptions.scrollY = panelHeight;
+            tableOptions.scrollCollapse = true;
         } else {
             tableOptions.paging = true;
             tableOptions.pagingType = this.panel.datatablePagingType;
+        }
+
+        if(this.panel.scrollx){
+            tableOptions.scrollX = this.panel.scrollx;
+        }
+
+        if(this.panel.leftColumns){
+            tableOptions.fixedColumns.leftColumns = this.panel.leftColumns;
+        }
+
+        if(this.panel.rightColumns){
+            tableOptions.fixedColumns.rightColumns = this.panel.rightColumns;
         }
 
         if (this.panel.buttons.collection) {
@@ -549,7 +568,19 @@ export class DatatableRenderer {
             tableOptions.buttons.push("selectRows");
         }
 
-
+        //Hide Empty Columns
+        if(this.panel.hideEmptyCols.enable){
+            let hideEmptyCols ={
+                trim: this.panel.hideEmptyCols.trim,
+                perPage: this.panel.hideEmptyCols.perPage,
+                onStateLoad: this.panel.hideEmptyCols.onStateLoad,
+                emptyVals: "N/A"
+            };
+            if(this.panel.hideEmptyCols.emptyVals != null){
+                hideEmptyCols.emptyVals = this.panel.hideEmptyCols.emptyVals.split(",");
+            }
+            tableOptions.hideEmptyCols= hideEmptyCols;
+        }
 
         var newDT = $('#datatable-panel-table-' + this.panel.id).DataTable(tableOptions);
 
@@ -598,11 +629,29 @@ export class DatatableRenderer {
         }
     }
 
-    formatDrilldown(columnHeader, row, columnIndex, value, panel, linkSrv) {
-        if (!panel.drilldowns || !linkSrv) {
-            return value;
+    shortenText (text,lenth) {
+        if(!text || text.length<=0 || !lenth || length <0 || text.length< lenth){
+            return text;
         }
+        var size = lenth/2;
+        return`${text.substr(0,size)}...${text.substr(text.length-size)}`;
+    }
 
+    formatText (text,lenth){
+        if(!text || text.length<=0 || !lenth || length <0){
+            return text;
+        }
+        return '<div title="' + text + '">' + this.shortenText(text,lenth) + '</div>';
+
+    }
+
+    formatDrilldown(columnHeader, row, columnIndex, value, panel, linkSrv) {
+        let style = this.getStyleForColumn(columnIndex);
+        let textLength = style.maxLength;
+
+        if (!panel.drilldowns || !linkSrv) {
+            return this.formatText(value,textLength);
+        }
 
         for (var y = 0; y < panel.drilldowns.length; y++) {
             var drilldown = panel.drilldowns[y];
@@ -629,13 +678,13 @@ export class DatatableRenderer {
 
                 var link = linkSrv.getPanelLinkAnchorInfo(drilldown, scopedVars);
 
-                return '<a class="panel-menu-link" style="color:#33B5E5;" target="' + link.target + '" href="' + link.href + '">' + link.title + '</a>';
+
+                return '<a class="panel-menu-link" style="color:#33B5E5;" target="' + link.target + '" href="' + link.href + '" title="' + link.title + '">' + this.shortenText(link.title,textLength) + '</a>';
 
             }
         }
 
-        return value;
-
+        return this.formatText(value,textLength);
     }
 
     render_values() {

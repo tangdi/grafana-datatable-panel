@@ -96,6 +96,8 @@ module.exports = function(grunt) {
           'datatables.net-responsive-bs/**',
           'datatables.net-responsive-dt/**',
           'datatables.net-select/**',
+          'datatables.net-fixedcolumns/**',
+          'datatables.net-fixedcolumns-dt/**',
           'fastclick/**',
           'font-awesome/**',
           'foundation/**',

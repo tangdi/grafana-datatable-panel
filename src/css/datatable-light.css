@@ -359,3 +359,7 @@ table.dataTable td {
     text-align: center; }
   .dataTables_wrapper .dataTables_filter {
     margin-top: 0.5em; } }
+
+.DTFC_LeftHeadWrapper {
+  background-color: #fbfbfb;}
+

@@ -1,6 +1,6 @@
 'use strict';
 
-System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', 'app/core/utils/file_export', './libs/datatables.net/js/jquery.dataTables.min.js', './css/panel.css!', './css/datatables-wrapper.css!', './transformers', './renderer'], function (_export, _context) {
+System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', 'app/core/utils/file_export', './libs/datatables.net/js/jquery.dataTables.min.js', './css/panel.css!', './css/datatables-wrapper.css!', './transformers', './renderer', './hideEmptyColumns'], function (_export, _context) {
     "use strict";
 
     var MetricsPanelCtrl, $, angular, kbn, FileExport, DataTable, transformDataToTable, transformers, DatatableRenderer, _createClass, _get, panelDefaults, DatatablePanelCtrl;
@@ -53,7 +53,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
             transformers = _transformers.transformers;
         }, function (_renderer) {
             DatatableRenderer = _renderer.DatatableRenderer;
-        }],
+        }, function (_hideEmptyColumns) {}],
         execute: function () {
             _createClass = function () {
                 function defineProperties(target, props) {
@@ -121,6 +121,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                 splitColumn: [],
                 splitChar: null,
                 scroll: false,
+                scrollx: false,
                 scrollHeight: 'default',
                 fontSize: '100%',
                 sort: {
@@ -216,6 +217,12 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     selectCells: false,
                     selectColumns: false,
                     selectRows: false
+                },
+                hideEmptyCols: {
+                    enable: false,
+                    trim: true,
+                    perPage: false,
+                    onStateLoad: true
                 }
             };
 
@@ -301,22 +308,24 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
 
                     System.config({
                         paths: {
+
                             "datatables.net": _this2.getPanelPath() + "libs/datatables.net/js/jquery.dataTables.min",
-                            "datatables.net-bs": _this2.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
-                            "datatables.net-jqui": _this2.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
-                            "datatables.net-zf": _this2.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                            // "datatables.net-bs": this.getPanelPath() + "libs/datatables.net-bs/js/dataTables.bootstrap.min",
+                            // "datatables.net-jqui": this.getPanelPath() + "libs/datatables.net-jqui/js/dataTables.jqueryui.min",
+                            // "datatables.net-zf": this.getPanelPath() + "libs/datatables.net-zf/js/dataTables.foundation.min",
+                            "datatables.net-fixedcolumns": _this2.getPanelPath() + "libs/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min",
                             "datatables.net-responsive": _this2.getPanelPath() + "libs/datatables.net-responsive/js/dataTables.responsive.min",
-                            "datatables.net-buttons": _this2.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons"
+                            "datatables.net-buttons": _this2.getPanelPath() + "libs/datatables.net-buttons/js/dataTables.buttons.min"
                         }
                     });
 
+                    System.import(_this2.getPanelPath() + 'libs/datatables.net-fixedcolumns/js/dataTables.fixedColumns.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-responsive/js/dataTables.responsive.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/dataTables.buttons.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.colVis.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.html5.min.js');
                     System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons/js/buttons.print.min.js');
-                    System.import(_this2.getPanelPath() + 'libs/datatables.net-select/js/dataTables.select.min.js');
-
+                    // System.import(this.getPanelPath() + 'libs/datatables.net-select/js/dataTables.select.min.js');
                     // basic datatables theme
                     // alternative themes are disabled since they affect all datatable panels on same page currently
                     switch (_this2.panel.datatableTheme) {
