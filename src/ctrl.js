@@ -60,7 +60,6 @@ import {
 } from './transformers';
 
 import {DatatableRenderer} from './renderer';
-import './hideEmptyColumns';
 
 const panelDefaults = {
     targets: [{}],

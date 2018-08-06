@@ -294,6 +294,7 @@ System.register(['jquery', 'app/core/utils/kbn', 'moment', './libs/datatables.ne
                             });
                             columnDefs.push({
                                 "targets": _i + rowNumberOffset,
+                                "visible": this.panel.columns[_i] && this.panel.columns[_i].visible ? true : false,
                                 "createdCell": function createdCell(td, cellData, rowData, row, col) {
                                     // hidden columns have null data
                                     if (cellData === null) return;

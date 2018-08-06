@@ -282,6 +282,7 @@ export class DatatableRenderer {
             columnDefs.push(
                 {
                     "targets": i + rowNumberOffset,
+                    "visible": this.panel.columns[i] && this.panel.columns[i].visible ? true : false,
                     "createdCell": function (td, cellData, rowData, row, col) {
                         // hidden columns have null data
                         if (cellData === null) return;

@@ -435,10 +435,56 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                         return { text: key, value: key };
                     });
                 },
+                isEmpty: function isEmpty(colData, trimData, emptyVals) {
+                    // Trim the data (unless its set to false)
+                    if (trimData) colData = $.trim(colData);
+
+                    // Basic check
+                    if (colData === null || colData.length === 0) return true;
+
+                    // Default to false, any empty matches will reset to true
+                    var retVal = false;
+
+                    // Internal helper function to check the value against a custom defined empty value (which can be a
+                    // regex pattern or a simple string)
+                    var _checkEmpty = function _checkEmpty(val, emptyVal) {
+                        var objType = Object.prototype.toString.call(emptyVal);
+
+                        var match = objType.match(/^\[object\s(.*)\]$/);
+
+                        // If its a regex pattern, then handle it differently
+                        if (match[1] === 'RegExp') return val.match(emptyVal);
+
+                        // Note: Should this comparison maybe use a lenient/loose comparison operator? hmm..
+                        return val == emptyVal;
+                    };
+
+                    // If multiple custom empty values are defined in an array, then check each
+                    if ($.isArray(emptyVals)) {
+                        $.each(emptyVals, function (i, ev) {
+                            if (_checkEmpty(colData, ev)) retVal = true;
+                        });
+                    }
+
+                    // Otherwise, just check the one, if set
+                    else if (typeof emptyVals !== 'undefined') {
+                            if (_checkEmpty(colData, emptyVals)) retVal = true;
+                        }
+
+                    return retVal;
+                },
                 transform: function transform(data, panel, model) {
                     var i, y, z;
+                    var hideEmptyCols = panel.hideEmptyCols;
+                    var colsEmpty = [];
+                    var emptyVals = "N/A";
+                    if (hideEmptyCols && hideEmptyCols.enable && hideEmptyCols.emptyVals) {
+                        emptyVals = hideEmptyCols.emptyVals.split(",");
+                    }
                     for (i = 0; i < panel.columns.length; i++) {
                         model.columns.push({ text: panel.columns[i].text });
+
+                        colsEmpty.push(true);
                     }
 
                     if (model.columns.length === 0) {
@@ -455,13 +501,25 @@ System.register(['lodash', 'moment', 'app/core/utils/flatten', 'app/core/time_se
                             if (_.isObject(dp) && panel.columns.length > 0) {
                                 var flattened = flatten(dp, null);
                                 for (z = 0; z < panel.columns.length; z++) {
-                                    values.push(flattened[panel.columns[z].value]);
+                                    var cellValue = flattened[panel.columns[z].value];
+                                    if (hideEmptyCols && hideEmptyCols.enable && colsEmpty[z]) {
+                                        if (!this.isEmpty(cellValue, hideEmptyCols.trim, emptyVals)) {
+                                            colsEmpty[z] = false;
+                                        }
+                                    }
+                                    values.push(cellValue);
                                 }
                             } else {
                                 values.push(JSON.stringify(dp));
                             }
 
                             model.rows.push(values);
+                        }
+                    }
+                    if (hideEmptyCols && hideEmptyCols.enable) {
+                        //var api =  new $.fn.dataTable.Api({});
+                        for (var x = 0; x < colsEmpty.length; x++) {
+                            panel.columns[x].visible = !colsEmpty[x];
                         }
                     }
                 }

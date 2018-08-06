@@ -317,11 +317,6 @@
                                 tooltip="Only hide column(s) if they're empty on the current page (executes on necessary events)"
                                 checked="ctrl.panel.hideEmptyCols.perPage"
                                 on-change="ctrl.render()"></gf-form-switch>
-                <gf-form-switch ng-if="ctrl.panel.hideEmptyCols.enable" class="gf-form" label-class="width-14"
-                                label="Empty onStateLoad"
-                                tooltip="Determine if the column visibility should be set when the DataTables stateLoadParams event is fired (when saveState is enabled)"
-                                checked="ctrl.panel.hideEmptyCols.onStateLoad"
-                                on-change="ctrl.render()"></gf-form-switch>
                 <div class="gf-form">
                     <label class="gf-form-label width-8">Empty values</label>
                     <input type="text" class="gf-form-input"
