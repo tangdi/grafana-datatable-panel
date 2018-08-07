@@ -96,6 +96,10 @@
                                 label="Hover"
                                 tooltip="Highlights row on hover (Requires Page Reload on toggle)"
                                 checked="ctrl.panel.hoverEnabled" on-change="ctrl.render()"></gf-form-switch>
+                <gf-form-switch class="gf-form" label-class="width-11"
+                                label="State Save"
+                                tooltip="Enable or disable state saving. When enabled aDataTables will store state information such as pagination position, display length, filtering and sorting."
+                                checked="ctrl.panel.stateSave" on-change="ctrl.render()"></gf-form-switch>
             </div>
         </div>
 
@@ -317,7 +321,7 @@
                                 tooltip="Only hide column(s) if they're empty on the current page (executes on necessary events)"
                                 checked="ctrl.panel.hideEmptyCols.perPage"
                                 on-change="ctrl.render()"></gf-form-switch>
-                <div class="gf-form">
+                <div ng-if="ctrl.panel.hideEmptyCols.enable" class="gf-form">
                     <label class="gf-form-label width-8">Empty values</label>
                     <input type="text" class="gf-form-input"
                            placeholder="N/A" data-placement="right"

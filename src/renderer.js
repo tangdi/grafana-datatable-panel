@@ -435,7 +435,7 @@ export class DatatableRenderer {
 
         var tableOptions = {
             dom: "lBfrtip",
-            stateSave: true,
+            stateSave: this.panel.stateSave != null? this.panel.stateSave : false,
             "lengthMenu": [[5, 10, 15, 25, 50, 75, 100, -1], [5, 10, 15, 25, 50, 75, 100, "All"]],
             searching: this.panel.searchEnabled,
             info: this.panel.infoEnabled,
@@ -617,7 +617,7 @@ export class DatatableRenderer {
         if (!this.panel.scroll) {
             // set the page size
             var page_length = $("select[name=datatable-panel-table-"+ this.panel.id+"_length]")[0];
-            if(page_length!==null && page_length.value !== null){
+            if(this.panel.stateSave != null && this.panel.stateSave && page_length!==null && page_length.value !== null){
                 newDT.page.len(page_length.value).draw();
             }else  if (this.panel.rowsPerPage !== null) {
                 newDT.page.len(this.panel.rowsPerPage).draw();

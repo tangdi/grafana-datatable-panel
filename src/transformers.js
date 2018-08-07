@@ -264,7 +264,7 @@ transformers.json = {
                     var flattened = flatten(dp, null);
                     for (z = 0; z < panel.columns.length; z++) {
                         let cellValue = flattened[panel.columns[z].value];
-                        if(hideEmptyCols && hideEmptyCols.enable &&  !panel.columns[z].visible[z]){
+                        if(hideEmptyCols && hideEmptyCols.enable &&  !panel.columns[z].visible){
                            if(!this.isEmpty(cellValue,hideEmptyCols.trim,emptyVals)){
                                panel.columns[z].visible =  true;
                            }

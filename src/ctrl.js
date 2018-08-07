@@ -326,10 +326,10 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
 
                 if (grafanaBootData.user.lightTheme) {
                     System.import(this.getPanelPath() + this.panel.themeOptions.light + '!css');
-                    System.import(this.getPanelPath() + '/css/buttons.dataTables-light.min.css!css');
+                    System.import(this.getPanelPath() + './css/buttons.dataTables-light.min.css!css');
                 } else {
                     System.import(this.getPanelPath() + this.panel.themeOptions.dark + "!css");
-                    System.import(this.getPanelPath() + "/css/buttons.dataTables-dark.min.css!css");
+                    System.import(this.getPanelPath() + "./css/buttons.dataTables-dark.min.css!css");
                 }
                 break;
             case 'bootstrap_theme':

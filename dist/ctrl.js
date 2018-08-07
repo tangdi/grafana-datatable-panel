@@ -336,10 +336,10 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
 
                             if (grafanaBootData.user.lightTheme) {
                                 System.import(_this2.getPanelPath() + _this2.panel.themeOptions.light + '!css');
-                                System.import(_this2.getPanelPath() + '/css/buttons.dataTables-light.min.css!css');
+                                System.import(_this2.getPanelPath() + './css/buttons.dataTables-light.min.css!css');
                             } else {
                                 System.import(_this2.getPanelPath() + _this2.panel.themeOptions.dark + "!css");
-                                System.import(_this2.getPanelPath() + "/css/buttons.dataTables-dark.min.css!css");
+                                System.import(_this2.getPanelPath() + "./css/buttons.dataTables-dark.min.css!css");
                             }
                             break;
                         case 'bootstrap_theme':
