@@ -200,7 +200,7 @@ const panelDefaults = {
         enable: false,
         trim: true,
         perPage: false,
-        onStateLoad: true,
+        emptyVals: "N/A"
     }
 };
 
@@ -322,12 +322,14 @@ export class DatatablePanelCtrl extends MetricsPanelCtrl {
             case 'basic_theme':
                 System.import(this.getPanelPath() + 'libs/datatables.net-dt/css/jquery.dataTables.min.css!');
                 System.import(this.getPanelPath() + 'libs/datatables.net-responsive-dt/css/responsive.dataTables.min.css!');
-                System.import(this.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
+                //System.import(this.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
 
                 if (grafanaBootData.user.lightTheme) {
                     System.import(this.getPanelPath() + this.panel.themeOptions.light + '!css');
+                    System.import(this.getPanelPath() + '/css/buttons.dataTables-light.min.css!css');
                 } else {
                     System.import(this.getPanelPath() + this.panel.themeOptions.dark + "!css");
+                    System.import(this.getPanelPath() + "/css/buttons.dataTables-dark.min.css!css");
                 }
                 break;
             case 'bootstrap_theme':

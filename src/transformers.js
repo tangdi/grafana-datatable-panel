@@ -235,15 +235,18 @@ transformers.json = {
     transform: function (data, panel, model) {
         var i, y, z;
         var hideEmptyCols = panel.hideEmptyCols;
-        var colsEmpty = [];
         var emptyVals = "N/A";
         if(hideEmptyCols && hideEmptyCols.enable && hideEmptyCols.emptyVals){
             emptyVals = hideEmptyCols.emptyVals.split(",");
         }
         for (i = 0; i < panel.columns.length; i++) {
             model.columns.push({text: panel.columns[i].text});
+            if(hideEmptyCols && hideEmptyCols.enable){
+                panel.columns[i].visible = false;
+            }else{
+                panel.columns[i].visible = true;
+            }
 
-            colsEmpty.push(true);
         }
 
         if (model.columns.length === 0) {
@@ -261,9 +264,9 @@ transformers.json = {
                     var flattened = flatten(dp, null);
                     for (z = 0; z < panel.columns.length; z++) {
                         let cellValue = flattened[panel.columns[z].value];
-                        if(hideEmptyCols && hideEmptyCols.enable && colsEmpty[z]){
+                        if(hideEmptyCols && hideEmptyCols.enable &&  !panel.columns[z].visible[z]){
                            if(!this.isEmpty(cellValue,hideEmptyCols.trim,emptyVals)){
-                               colsEmpty[z] = false;
+                               panel.columns[z].visible =  true;
                            }
                         }
                         values.push(cellValue);
@@ -273,12 +276,6 @@ transformers.json = {
                 }
 
                 model.rows.push(values);
-            }
-        }
-        if(hideEmptyCols && hideEmptyCols.enable){
-            //var api =  new $.fn.dataTable.Api({});
-            for(var x = 0; x < colsEmpty.length; x++){
-               panel.columns[x].visible = !colsEmpty[x];
             }
         }
     }

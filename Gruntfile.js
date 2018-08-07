@@ -91,7 +91,6 @@ module.exports = function(grunt) {
           'datatables.net-jqui/**',
           'datatables.net-zf/**',
           'datatables.net-buttons/**',
-          'datatables.net-buttons-dt/**',
           'datatables.net-responsive/**',
           'datatables.net-responsive-bs/**',
           'datatables.net-responsive-dt/**',

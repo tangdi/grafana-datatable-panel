@@ -222,7 +222,7 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                     enable: false,
                     trim: true,
                     perPage: false,
-                    onStateLoad: true
+                    emptyVals: "N/A"
                 }
             };
 
@@ -332,12 +332,14 @@ System.register(['app/plugins/sdk', 'jquery', 'angular', 'app/core/utils/kbn', '
                         case 'basic_theme':
                             System.import(_this2.getPanelPath() + 'libs/datatables.net-dt/css/jquery.dataTables.min.css!');
                             System.import(_this2.getPanelPath() + 'libs/datatables.net-responsive-dt/css/responsive.dataTables.min.css!');
-                            System.import(_this2.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
+                            //System.import(this.getPanelPath() + 'libs/datatables.net-buttons-dt/css/buttons.dataTables.min.css!');
 
                             if (grafanaBootData.user.lightTheme) {
                                 System.import(_this2.getPanelPath() + _this2.panel.themeOptions.light + '!css');
+                                System.import(_this2.getPanelPath() + '/css/buttons.dataTables-light.min.css!css');
                             } else {
                                 System.import(_this2.getPanelPath() + _this2.panel.themeOptions.dark + "!css");
+                                System.import(_this2.getPanelPath() + "/css/buttons.dataTables-dark.min.css!css");
                             }
                             break;
                         case 'bootstrap_theme':

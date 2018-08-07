@@ -33,7 +33,6 @@
     "datatables.net-responsive": "^2.2.0",
     "datatables.net-responsive-dt": "^2.2.0",
     "datatables.net-buttons": "^1.4.2",
-    "datatables.net-buttons-dt": "^1.4.2",
     "datatables.net-select": "^1.2.3",
     "datatables.net-select-dt": "^1.2.3"
   }
